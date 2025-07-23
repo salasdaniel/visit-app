@@ -1,18 +1,15 @@
 <?php
 
-	$servername = "127.0.0.1";
-	$username = "root";
-	$password = "";
-	$database = "propool_app";
-	
-	// Crea una conexión a la base de datos
-	$conn = new mysqli($servername, $username, $password, $database);
-	
-	// Verifica si la conexión fue exitosa
-	if ($conn->connect_error) {
-		die("Error de conexión: " . $conn->connect_error);
-	}
+$host = "localhost";
+$port = "5432";
+$dbname = "autoflet";
+$user = "postgres";
+$password = "7650926";
 
-	
+// Crea una conexión a la base de datos PostgreSQL
+$conn = pg_connect("host=$host port=$port dbname=$dbname user=$user password=$password");
 
-?>
+// Verifica si la conexión fue exitosa
+if (!$conn) {
+    die("Error de conexión: " . pg_last_error());
+}

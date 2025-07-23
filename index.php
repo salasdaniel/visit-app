@@ -9,17 +9,17 @@ if (isset($_SESSION['error'])) {
 			Swal.fire({
 				icon: 'error',
 				title: 'Oops...',
-				text: 'El documento ingresado, no se encuentra en base de datos...',
+				text: 'The entered document is not found in the database...',
 			})
 		</script>";
 	
 	session_destroy();
 }
 
-if (isset($_SESSION['rol'])){
-	if($_SESSION['rol'] == 2){
+if (isset($_SESSION['role'])){
+	if($_SESSION['role'] == 2){
 		header("Location: php/views/user/qr.php");
-	}elseif($_SESSION['rol'] == 2){
+	}elseif($_SESSION['role'] == 2){
 		header("Location: php/views/admin/admin.php");
 	}
 }
@@ -33,13 +33,13 @@ if (isset($_SESSION['rol'])){
 					<form method="POST" id="contactForm" name="contactForm" action="php\app\login.php">
 						<div class="row" style="display: flex; justify-content: center">
 							<div class="col-lg-8" id="mainContent">
-								<!-- aviso  -->
+								<!-- notice  -->
 								
 								<!-- Personal Details -->
 								<div class="row box first">
 									<div class="box-header">
-										<h3 style="margin: 0px">Inicio Sesión</h3>
-										<p>Para iniciar sesión ingrese su número de cédula.<br></p>
+										<h3 style="margin: 0px">Login</h3>
+										<p>To log in, please enter your ID number.<br></p>
 									</div>
 								
 									<div class="col-md-12 col-sm-12">
@@ -72,4 +72,3 @@ if (isset($_SESSION['rol'])){
 		<!-- Main End -->
 
 <?php require './php/partials/footer.php'; ?>
-

@@ -4,13 +4,14 @@ require '../../partials/head.php';
 require '../../partials/subheader.php';
 
 
-$_SESSION['id'];
-$_SESSION['nombre'];
-$_SESSION['apellido'];
-$_SESSION['ci'];
-$_SESSION['rol'];
 
-$nombre_completo = ucfirst(strtolower($_SESSION['nombre'])) . " " . ucfirst(strtolower($_SESSION['apellido']));
+$_SESSION['user_id'];
+$_SESSION['first_name'];
+$_SESSION['last_name'];
+$_SESSION['document'];
+$_SESSION['role'];
+
+$full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtolower($_SESSION['last_name']));
 
 ?>
 
@@ -22,7 +23,7 @@ $nombre_completo = ucfirst(strtolower($_SESSION['nombre'])) . " " . ucfirst(strt
 			<!-- Form -->
 			<div class="row cent">
 				<div style="margin: 50px 0px; text-align: center" class="ptb20">
-					<h1 style="color:#53c4da">¡Bienvenido <?php echo $nombre_completo ?>! </h1>
+					<h1 style="color:#53c4da">Welcome <?php echo $full_name ?>! </h1>
 				</div>
 				<div class="col-lg-8 flex " id="mainContent">
 
@@ -32,22 +33,22 @@ $nombre_completo = ucfirst(strtolower($_SESSION['nombre'])) . " " . ucfirst(strt
 							<a href="vendedores.php" target="_parent">
 								<div class="contact-box pointer">
 									<i class="icon icon-map-marker"></i>
-									<h2>Vendedores</h2>
-									<p>Agregar, eliminar o ver vendores</p>
+									<h2>Advisors</h2>
+									<p>Add, remove or view advisors</p>
 								</div>
 							</a>
 							<a href="clientes.php">
 								<div class="contact-box pointer">
 									<i class="icon icon-envelope"></i>
-									<h2>Clientes</h2>
-									<p>Agregar, eliminar o ver clientes</p>
+									<h2>Clients</h2>
+									<p>Add, remove or view clients</p>
 								</div>
 							</a>
 							<a href="vw_visitas.php">
 								<div class="contact-box pointer">
 									<i class="icon icon-phone-call2"></i>
-									<h2>Visitas</h2>
-									<p>Ver visitas</p>
+									<h2>Visits</h2>
+									<p>View visits</p>
 								</div>
 							</a>
 						</div>

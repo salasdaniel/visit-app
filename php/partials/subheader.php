@@ -1,7 +1,7 @@
 <!-- Sub Header -->
 <?php
 
-if ($_SESSION['rol'] == 1) {
+if ($_SESSION['role'] == 1) {
 
 ?>
 
@@ -14,16 +14,16 @@ if ($_SESSION['rol'] == 1) {
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item">
-                <a class="nav-link" href="../admin/admin.php">Inicio</a>
+                <a class="nav-link" href="../admin/admin.php">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../admin/vendedores.php">Asesores</a>
+                <a class="nav-link" href="../admin/vendedores.php">Advisors</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../admin/clientes.php">Clientes</a>
+                <a class="nav-link" href="../admin/clientes.php">Clients</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../admin/vw_visitas.php"> Visitas</a>
+                <a class="nav-link" href="../admin/vw_visitas.php">Visits</a>
             </li>
         </ul>
 
@@ -35,16 +35,16 @@ if ($_SESSION['rol'] == 1) {
     <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item">
-                <a class="nav-link" href="admin.php">Inicio </a>
+                <a class="nav-link" href="admin.php">Home</a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" href="vendedores.php">Vendedores </a>
+                <a class="nav-link" href="vendedores.php">Advisors</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="clientes.php">Clientes</a>
+                <a class="nav-link" href="clientes.php">Clients</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="vw_visitas.php">Visitas</a>
+                <a class="nav-link" href="vw_visitas.php">Visits</a>
             </li>
         </ul>
 
