@@ -30,11 +30,11 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 					<div class="col-lg-8" id="sidebar">
 						<!-- Contact Info Container -->
 						<div id="contactInfoContainer" class="theiaStickySidebar">
-							<a href="vendedores.php" target="_parent">
+							<a href="users.php" target="_parent">
 								<div class="contact-box pointer">
 									<i class="icon icon-map-marker"></i>
-									<h2>Advisors</h2>
-									<p>Add, remove or view advisors</p>
+									<h2>Users</h2>
+									<p>Add, remove or view users</p>
 								</div>
 							</a>
 							<a href="clientes.php">

@@ -44,7 +44,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+    
 
 
 </head>
@@ -65,9 +65,9 @@
         <!-- Header End -->
 
         <!-- Sub Header -->
-        <div class="sub-header" style="margin: 0;">
+        <!-- <div class="sub-header" style="margin: 0;">
             <div class="container">
                 <h1>VISIT APP</h1>
             </div>
-        </div>
+        </div> -->
         <!-- Sub Header End -->
