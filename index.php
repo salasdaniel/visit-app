@@ -12,63 +12,52 @@ if (isset($_SESSION['error'])) {
 				text: 'The entered document is not found in the database...',
 			})
 		</script>";
-	
+
 	session_destroy();
 }
 
-if (isset($_SESSION['role'])){
-	if($_SESSION['role'] == 2){
+if (isset($_SESSION['role'])) {
+	if ($_SESSION['role'] == 2) {
 		header("Location: php/views/user/qr.php");
-	}elseif($_SESSION['role'] == 2){
+	} elseif ($_SESSION['role'] == 2) {
 		header("Location: php/views/admin/admin.php");
 	}
 }
 ?>
-		<!-- Main -->
-		<main>
-			<!-- Contact  -->
-			<div class="contact vh70" style="height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-				<div class="container">
-					<!-- Form -->
-					<form method="POST" id="contactForm" name="contactForm" action="php\app\login.php">
-						<div class="row" style="display: flex; justify-content: center">
-							<div class="col-lg-8" id="mainContent">
-								<!-- notice  -->
-								
-								<!-- Personal Details -->
-								<div class="row box first">
-									<div class="box-header">
-										<h3 style="margin: 0px">Login</h3>
-										<p>To log in, please enter your ID number.<br></p>
-									</div>
-								
-									<div class="col-md-12 col-sm-12">
-										<div class="form-group">
-											<input id="ci" class="form-control" name="ci" type="number" required/>
-										</div>
-									</div>
-								</div>
-								
-								<div class="row box">
-									<div class="col-12">
-										<div class="form-group">
-											<button type="submit" name="submit" class="btn-form-func">
-												<span class="btn-form-func-content">Submit</span>
-												<span class="icon"><i class="fa fa-paper-plane" aria-hidden="true"></i></span>
-											</button>
-										</div>
-									</div>
-								</div>
-								<!-- Submit -->
-							</div>
-						
+<!-- Main -->
+<main>
+	<div class="contact py-5" style="min-height: 85vh; display: flex; align-items: center;">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<!-- Card: Login Form -->
+					<div class="card">
+						<div class="card-header bg-dark text-white">
+							<strong>Welcome to Visit App</strong>
 						</div>
-					</form>
-					<!-- Form End -->
+						<div class="card-body">
+							<p class="mb-4">To log in, please enter your ID number.</p>
+							<form method="POST" id="contactForm" name="contactForm" action="php/app/login.php">
+								<div class="form-group d-flex align-items-end" style="gap: 10px;">
+									<div class="flex-grow-1">
+										<label for="ci">Document Number</label>
+										<input id="ci" name="ci" type="number" class="form-control" required>
+									</div>
+									<button type="submit" name="submit" class="btn btn-primary"
+										style="height: 35px;">
+										Submit <i class="fa fa-paper-plane ml-2"></i>
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- End Card -->
 				</div>
 			</div>
-			<!-- Contact End -->
-		</main>
-		<!-- Main End -->
+		</div>
+	</div>
+</main>
+
+<!-- Main End -->
 
 <?php require './php/partials/footer.php'; ?>

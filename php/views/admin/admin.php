@@ -16,51 +16,77 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 ?>
 
 <!-- Main -->
-<main>
-	<!-- Contact  -->
-	<div class="contact">
+<main class="d-flex flex-column" style="min-height: 92vh;">
+	<div class="contact py-5 flex-grow-1">
 		<div class="container">
-			<!-- Form -->
-			<div class="row cent">
-				<div style="margin: 50px 0px; text-align: center" class="ptb20">
-					<h1 style="color:#53c4da">Welcome <?php echo $full_name ?>! </h1>
-				</div>
-				<div class="col-lg-8 flex " id="mainContent">
 
-					<div class="col-lg-8" id="sidebar">
-						<!-- Contact Info Container -->
-						<div id="contactInfoContainer" class="theiaStickySidebar">
-							<a href="users.php" target="_parent">
-								<div class="contact-box pointer">
-									<i class="icon icon-map-marker"></i>
-									<h2>Users</h2>
-									<p>Add, remove or view users</p>
-								</div>
-							</a>
-							<a href="clientes.php">
-								<div class="contact-box pointer">
-									<i class="icon icon-envelope"></i>
-									<h2>Clients</h2>
-									<p>Add, remove or view clients</p>
-								</div>
-							</a>
-							<a href="vw_visitas.php">
-								<div class="contact-box pointer">
-									<i class="icon icon-phone-call2"></i>
-									<h2>Visits</h2>
-									<p>View visits</p>
-								</div>
-							</a>
-						</div>
-						<!-- Contact Info Container End -->
-					</div>
+			<div class="row justify-content-center mb-4">
+				<div class="col-lg-10 py-5" >
+					<h2 class="display-4 text-left ">
+						Welcome <?php echo $full_name ?>!
+					</h2>
 				</div>
-
-				<!-- Form End -->
 			</div>
-		</div>
-		<!-- Contact End -->
+
+			<div class="row justify-content-center">
+				<div class="col-lg-10">
+					<div class="card">
+						<div class="card-header bg-dark text-white">
+							<strong>Dashboard</strong>
+						</div>
+						<div class="card-body">
+
+							<div class="row text-center">
+								<div class="col-md-4 mb-4">
+									<a href="users.php" target="_parent" class="text-decoration-none text-dark">
+										<div class="border rounded p-4 h-100 bg-light transition-hover">
+											<i class="icon icon-map-marker fa-2x mb-2 d-block"></i>
+											<h5 class="font-weight-bold">Users</h5>
+											<p class="mb-0">Add, remove or view users</p>
+										</div>
+									</a>
+								</div>
+								<div class="col-md-4 mb-4">
+									<a href="clients.php" class="text-decoration-none text-dark">
+										<div class="border rounded p-4 h-100 bg-light transition-hover">
+											<i class="icon icon-envelope fa-2x mb-2 d-block"></i>
+											<h5 class="font-weight-bold">Clients</h5>
+											<p class="mb-0">Add, remove or view clients</p>
+										</div>
+									</a>
+								</div>
+								<div class="col-md-4 mb-4">
+									<a href="vw_visitas.php" class="text-decoration-none text-dark">
+										<div class="border rounded p-4 h-100 bg-light transition-hover">
+											<i class="icon icon-phone-call2 fa-2x mb-2 d-block"></i>
+											<h5 class="font-weight-bold">Visits</h5>
+											<p class="mb-0">View visits</p>
+										</div>
+									</a>
+								</div>
+							</div>
+
+						</div> <!-- /.card-body -->
+					</div> <!-- /.card -->
+				</div> <!-- /.col -->
+			</div> <!-- /.row -->
+		</div> <!-- /.container -->
+	</div> <!-- /.contact -->
+
+	
 </main>
+
+<!-- Estilo de efecto hover -->
+<style>
+	.transition-hover {
+		transition: box-shadow 0.3s ease-in-out;
+	}
+	.transition-hover:hover {
+		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+	}
+</style>
+
+
 <!-- Main End -->
 
 <?php require '../../partials/footer.php'; ?>

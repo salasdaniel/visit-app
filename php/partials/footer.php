@@ -1,5 +1,11 @@
 <!-- Footer -->
-<footer class="main-footer ptb pt20 dn">
+
+<footer class="bg-light py-3">
+		<div class="container text-center">
+			<small class="text-muted">© <?php echo date('Y'); ?> daniel@noko.com.py</small>
+		</div>
+</footer>
+<!-- <footer class="main-footer ptb pt20 dn">
     <div class="container">
         <div class="row">
             <div class="col-md-8">
@@ -12,7 +18,7 @@
             </div>
         </div>
     </div>
-</footer>
+</footer> -->
 <!-- Footer End -->
 </div>
 <!-- Page End -->

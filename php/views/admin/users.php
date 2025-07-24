@@ -45,7 +45,7 @@ while ($user_info = pg_fetch_assoc($result)) {
 		<div class="container">
 			<!-- Card: Filtros, Tabla, Paginación -->
 			<div class="card mb-5">
-				<div class="card-header  bg-primary text-white" >
+				<div class="card-header  bg-dark text-white" >
 					<strong>Users List</strong>
 				</div>
 				<div class="card-body">
@@ -98,7 +98,7 @@ while ($user_info = pg_fetch_assoc($result)) {
 
 			<!-- Card: Formulario -->
 			<div class="card">
-				<div class="card-header bg-primary text-white">
+				<div class="card-header bg-dark text-white">
 					<strong>Add a New User</strong>
 				</div>
 				<div class="card-body">

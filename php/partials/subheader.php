@@ -5,7 +5,7 @@ if ($_SESSION['role'] == 1) {
 
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary" style="padding: 0px 50px">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark" style="padding: 0px 50px">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -17,10 +17,10 @@ if ($_SESSION['role'] == 1) {
                 <a class="nav-link" href="../admin/admin.php">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../admin/vendedores.php">Advisors</a>
+                <a class="nav-link" href="../admin/users.php">Users</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../admin/clientes.php">Clients</a>
+                <a class="nav-link" href="../admin/clients.php">Clients</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../admin/vw_visitas.php">Visits</a>
