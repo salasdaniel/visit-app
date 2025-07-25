@@ -6,43 +6,101 @@ require '../../partials/subheader.php';
 require '../../partials/swal.php';
 require '../../config/conexion.php';
 
+// Mostrar SweetAlert si hay mensaje de sesión
+
+if (isset($_SESSION['msg']) && isset($_SESSION['msg_code'])) {
+	echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+	if ($_SESSION['msg_code'] == 1) {
+		echo '<script>
+		Swal.fire({
+			icon: "success",
+			title: "Success",
+			text: "' . addslashes($_SESSION['msg']) . '"
+		});
+		</script>';
+	} else if ($_SESSION['msg_code'] == 2) {
+		echo '<script>
+		Swal.fire({
+			icon: "warning",
+			title: "Duplicate documents found",
+			html: "' . addslashes($_SESSION['msg']) . '"
+		});
+		</script>';
+	}
+	unset($_SESSION['msg']);
+	unset($_SESSION['msg_code']);
+}
+
+
+// Consulta principal para obtener todos los clientes
+$sql = "SELECT * FROM clientes ORDER BY id DESC";
+$result = pg_query($conn, $sql);
+
+// Construcción del array para JS
+$clients = [];
+if ($result) {
+	while ($user_info = pg_fetch_assoc($result)) {
+		$clients[] = [
+			'id' => $user_info['id'],
+			'first_name' => ucfirst(strtolower($user_info['nombre'])),
+			'last_name' => ucfirst(strtolower($user_info['apellido'])),
+			'ruc' => $user_info['ruc'],
+			'phone' => $user_info['telefono'],
+			'address' => $user_info['direccion'],
+			'plan' => $user_info['plan'],
+			'observation' => $user_info['observacion'],
+			'active' => ($user_info['activo'] === 't') ? 'Yes' : 'No'
+			
+		];
+	}
+}
+
+
 ?>
 <!-- Main -->
-<main class="py-5">
-	<div class="container">
-		<!-- Form Card -->
-		<div class="card mb-5">
-			<div class="card-header bg-dark text-white">
-				<strong>Add a New Client</strong>
-			</div>
-			<div class="card-body">
-				<form method="POST" id="contactForm" name="contactForm" action="../../app/add_cliente.php">
-					<!-- Personal Information -->
-					<div class="mb-4">
-						<h5><strong>1.</strong> Personal Information</h5>
-						<div class="form-group">
-							<input id="username" class="form-control" name="nombre" placeholder="First Name..." type="text" required pattern="^[a-zA-Z\s.]+$">
-							<input id="apellido" class="form-control" name="apellido" placeholder="Last Name..." type="text" required>
+<main class="">
+   <div class="contact container" style="padding-bottom:0;">
+	   <!-- Form Card -->
+	   <div class="card mb-0">
+<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+	<strong>Add a New Client</strong>
+	<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#addClientCardBody"><i class="fa fa-chevron-down"></i></button>
+</div>
+<div class="card-body collapse show" id="addClientCardBody">
+				<form method="POST" id="contactForm" name="contactForm" action="../../app/add_client.php">
+					<div class="form-row">
+						<div class="form-group col-md-3">
+							<label for="username">First Name</label>
+							<input type="text" id="username" name="nombre" class="form-control" placeholder="John... " required pattern="^[a-zA-Z\s.]+$">
 						</div>
-						<div class="form-group">
-							<input id="ruc" class="form-control" name="ruc" placeholder="ID or RUC..." type="text" required>
-							<input id="phone" class="form-control" name="numero" placeholder="Contact Number. e.g. 991444333" type="number" required>
+						<div class="form-group col-md-3">
+							<label for="apellido">Last Name</label>
+							<input type="text" id="apellido" name="apellido" class="form-control" placeholder="Smith..." required>
+						</div>
+						<div class="form-group col-md-3">
+							<label for="ruc">ID or Passport</label>
+							<input type="text" id="ruc" name="ruc" class="form-control" placeholder="202-555-0173 " required>
+						</div>
+						<div class="form-group col-md-3">
+							<label for="phone">Contact Number</label>
+							<input type="text" id="phone" name="numero" class="form-control" placeholder="+1 202-555-0173" required>
 						</div>
 					</div>
-
-					<!-- Visit Data -->
-					<div class="mb-4">
-						<h5><strong>2.</strong> Visit Details</h5>
-						<div class="form-group">
-							<input id="direccion" class="form-control" name="direccion" placeholder="Address..." type="text" required>
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="direccion">Address</label>
+							<input type="text" id="direccion" name="direccion" class="form-control" placeholder="742 Evergreen Terrace  
+Springfield, IL 62704  
+United States... " required>
 						</div>
-						<div class="form-group">
-							<select id="subjectList" class="form-control" name="plan" required>
+						<div class="form-group col-md-4">
+							<label for="subjectList">Plan</label>
+							<select id="subjectList" name="plan" class="form-control" required>
 								<option disabled selected>Select a Plan</option>
 								<?php
-								$sql = "SELECT * FROM planes";
-								$result = pg_query($conn, $sql);
-								while ($planes = pg_fetch_assoc($result)) {
+								$sql_planes = "SELECT * FROM planes";
+								$result_planes = pg_query($conn, $sql_planes);
+								while ($planes = pg_fetch_assoc($result_planes)) {
 									$idplan =  $planes['id'];
 									$nombre_plan =  $planes['nombre'];
 									echo "<option value='$idplan'>$nombre_plan</option>";
@@ -50,28 +108,29 @@ require '../../config/conexion.php';
 								?>
 							</select>
 						</div>
-						<div class="form-group">
-							<input id="hora" class="form-control" name="observacion" placeholder="Observations..." required>
-						</div>
-					</div>
+						<div class="form-group col-md-4 ">
+							<label for="hora" class="">Observations</label>
+							<input type="text" id="hora" name="observacion" class="form-control" placeholder="Visit on sunday..." required>
 
-					<!-- Submit -->
-					<div class="form-group text-right">
-						<button type="submit" name="submit" class="btn btn-primary">
-							Register <i class="fa fa-paper-plane ml-2"></i>
-						</button>
+						</div>
+						<div class="d-flex justify-content-end align-items-end w-100">
+							<button type="submit" name="submit" class="btn btn-primary" style="height: 35px;">
+								Register <i class="fa fa-paper-plane ml-2"></i>
+							</button>
+						</div>
 					</div>
 				</form>
 			</div>
 		</div>
 
 		<!-- Bulk Upload Section -->
-		<div class="card mb-5">
-			<div class="card-header bg-dark text-white">
-				<strong>Bulk Upload Clients</strong>
-			</div>
-			<div class="card-body">
-				<form action="../../../app/procesar_excel.php" method="post" enctype="multipart/form-data">
+	   <div class="card mb-0">
+<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+	<strong>Bulk Upload Clients</strong>
+	<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#bulkUploadCardBody"><i class="fa fa-chevron-down"></i></button>
+</div>
+<div class="card-body collapse" id="bulkUploadCardBody">
+				<form action="../../app/bulk.php" method="post" enctype="multipart/form-data">
 					<div class="form-group">
 						<label for="inputGroupFile02">Attach .xls file</label>
 						<div class="custom-file">
@@ -80,10 +139,10 @@ require '../../config/conexion.php';
 						</div>
 					</div>
 					<div class="form-group">
-						<button type="submit" name="submit" class="btn btn-success mr-2">
+						<button type="submit" name="submit" class="btn btn-primary mr-2">
 							Process <i class="fa fa-paper-plane ml-2"></i>
 						</button>
-						<a href='../../../docs/plantilla_clientes.xlsx' class="btn btn-secondary">
+						<a href='../../../docs/migration_model.xlsx' class="btn btn-secondary">
 							Download Template
 						</a>
 					</div>
@@ -91,8 +150,7 @@ require '../../config/conexion.php';
 						<strong>Instructions</strong>
 						<ul>
 							<li>1. Columns must follow the same order as the template.</li>
-							<li>2. Phone numbers must be numeric, without dashes, spaces, or other characters.</li>
-							<li>3. Plans must be specified as numbers: 1 for Gold, 2 for Silver, 3 for Bronze.</li>
+							<li>2. Plans must be specified as numbers: 1 for Gold, 2 for Silver, 3 for Bronze.</li>
 							<li class="text-danger">You must follow the instructions exactly to load records into the database.</li>
 						</ul>
 					</div>
@@ -103,72 +161,244 @@ require '../../config/conexion.php';
 
 		<!-- Clients List -->
 		<?php if ($_SESSION['role'] == 1): ?>
-			<div class="card">
-				<div class="card-header bg-dark text-white">
-					<strong>Clients List</strong>
-				</div>
-				<div class="card-body">
-					<p class="mb-2 small">
-						Page <?php echo $pagina ?> – Total records: <?php echo $total_registros ?>
-					</p>
+	   <div class="card mb-0">
+<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+	<strong>Clients List</strong>
+	<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#clientsListCardBody"><i class="fa fa-chevron-down"></i></button>
+</div>
+<div class="card-body collapse show" id="clientsListCardBody">
+<div class="d-flex align-items-center gap-2 mb-3">
+	<label for="recordsPerPage" class="mb-0 mr-2">Show</label>
+	<select id="recordsPerPage" class="form-control mr-3" style="width: 90px;">
+		<option value="10">10</option>
+		<option value="20">20</option>
+		<option value="50">50</option>
+	</select>
+	<input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="max-width: 250px;">
+	<select id="activeFilter" class="form-control ml-2" style="width: 120px;">
+		<option value="yes" selected>Active</option>
+		<option value="no">Inactive</option>
+		<option value="all">All</option>
+	</select>
+</div>
 					<div class="table-responsive">
-						<table class="table table-striped table-bordered text-center">
-							<thead>
+						<table class="table table-bordered table-hover text-center" id="clientsTable">
+							<thead class="thead-light">
 								<tr>
-									<th>ID</th>
-									<th>First Name</th>
-									<th>Last Name</th>
-									<th>RUC</th>
-									<th>Phone</th>
-									<th>Address</th>
-									<th>Plan</th>
-									<th>Observation</th>
-									<th colspan="2">Actions</th>
+									<th class="text-center" onclick="sortTable(0)">ID <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(1)">First Name <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(2)">Last Name <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(3)">RUC <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(4)">Phone <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(5)">Address <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(6)">Plan <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(7)">Observation <i class="fa fa-sort"></i></th>
+									<th class="text-center" onclick="sortTable(7)">Active <i class="fa fa-sort"></i></th>
+									<th class="text-center">Delete</th>
+									<th class="text-center">Edit</th>
 								</tr>
 							</thead>
-							<tbody>
-								<?php while ($info_usuario = pg_fetch_assoc($result)): ?>
-									<tr>
-										<td><?php echo $info_usuario['id']; ?></td>
-										<td><?php echo ucfirst(strtolower($info_usuario['nombre'])); ?></td>
-										<td><?php echo ucfirst(strtolower($info_usuario['apellido'])); ?></td>
-										<td><?php echo $info_usuario['ruc']; ?></td>
-										<td><?php echo $info_usuario['telefono']; ?></td>
-										<td><?php echo $info_usuario['direccion']; ?></td>
-										<td><?php echo $info_usuario['plan']; ?></td>
-										<td><?php echo $info_usuario['observacion']; ?></td>
-										<td>
-											<button type="button" class="btn btn-danger btn-sm" value="<?php echo $info_usuario['id']; ?>">-</button>
-										</td>
-										<td>
-											<button type="button" class="btn btn-info btn-sm" value="<?php echo $info_usuario['id']; ?>">Edit</button>
-										</td>
-									</tr>
-								<?php endwhile; ?>
+							<tbody id="clientsTableBody">
+								<!-- JS render -->
 							</tbody>
 						</table>
 					</div>
-
-					<!-- Pagination -->
-					<nav class="mt-4">
+					<nav aria-label="Page navigation example" class="mt-3">
 						<ul class="pagination justify-content-center">
-							<li class="page-item">
-								<a class="page-link" href="?num=<?php echo ($pagina > 1) ? $pagina - 1 : 1; ?>">Previous</a>
-							</li>
-							<li class="page-item">
-								<a class="page-link" href="?num=<?php echo ($pagina < $paginas) ? $pagina + 1 : $pagina; ?>">Next</a>
-							</li>
+							<!-- JS render -->
 						</ul>
 					</nav>
+
+					<script>
+
+					</script>
 				</div>
 			</div>
 		<?php endif; ?>
 	</div>
+	<?php require '../../partials/footer.php'; ?>
 </main>
 
 
 <script>
+// Toggle card content
+document.addEventListener('DOMContentLoaded', function() {
+	document.querySelectorAll('.toggle-card').forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			var target = document.querySelector(this.getAttribute('data-target'));
+			if (target.classList.contains('show')) {
+				target.classList.remove('show');
+				this.innerHTML = '<i class="fa fa-chevron-right"></i>';
+			} else {
+				target.classList.add('show');
+				this.innerHTML = '<i class="fa fa-chevron-down"></i>';
+			}
+		});
+	});
+});
 	btns = document.getElementsByClassName('btn-danger');
+	btnsP = document.getElementsByClassName('btn-primary');
+	// Obtener los datos de clientes desde PHP
+
+
+const clientsData = <?php echo json_encode($clients); ?>;
+let clientsPerPage = 10;
+let currentPage = 1;
+let filteredClients = [];
+let sortDirection = {};
+
+function applyFilters() {
+	const searchValue = document.getElementById('tableSearch').value.toLowerCase();
+	const activeValue = document.getElementById('activeFilter').value;
+	filteredClients = clientsData.filter(client => {
+		if (activeValue === 'yes' && client.active !== 'Yes') return false;
+		if (activeValue === 'no' && client.active !== 'No') return false;
+		if (activeValue === 'all') {
+			// no filter
+		}
+		if (searchValue && !Object.values(client).join(' ').toLowerCase().includes(searchValue)) return false;
+		return true;
+	});
+}
+
+function renderTable(page = 1) {
+	const start = (page - 1) * clientsPerPage;
+	const end = start + clientsPerPage;
+	const clientsToShow = filteredClients.slice(start, end);
+	const tbody = document.getElementById('clientsTableBody');
+	tbody.innerHTML = '';
+	clientsToShow.forEach(client => {
+		const row = document.createElement('tr');
+		row.innerHTML = `
+			<th scope="row" class="text-center">${client.id}</th>
+			<td class="text-center">${client.first_name}</td>
+			<td class="text-center">${client.last_name}</td>
+			<td class="text-center">${client.ruc}</td>
+			<td class="text-center">${client.phone}</td>
+			<td class="text-center">${client.address}</td>
+			<td class="text-center">${client.plan}</td>
+			<td class="text-center">${client.observation}</td>
+			<td class="text-center">${client.active}</td>
+			<td class="text-center">
+				<button type="button" class="btn btn-danger btn-sm" value="${client.id}" style="font-size: 12px"><strong>-</strong></button>
+			</td>
+<td class="text-center">
+	<button type="button" class="btn btn-primary btn-edit btn-sm" value="${client.id}" style="font-size: 12px">Edit</button>
+</td>
+		`;
+		tbody.appendChild(row);
+	});
+	renderPagination();
+	attachDeleteEvents();
+	attachEditEvents();
+}
+
+function renderPagination() {
+	const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
+	const pagination = document.querySelector('.pagination');
+	pagination.innerHTML = '';
+	pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a></li>`;
+	for (let i = 1; i <= totalPages; i++) {
+		pagination.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
+	}
+	pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a></li>`;
+}
+
+function changePage(page) {
+	const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
+	if (page < 1 || page > totalPages) return;
+	currentPage = page;
+	renderTable(currentPage);
+}
+
+document.getElementById('tableSearch').addEventListener('keyup', function() {
+	applyFilters();
+	currentPage = 1;
+	renderTable(currentPage);
+});
+
+document.getElementById('activeFilter').addEventListener('change', function() {
+	applyFilters();
+	currentPage = 1;
+	renderTable(currentPage);
+});
+
+document.getElementById('recordsPerPage').addEventListener('change', function() {
+	clientsPerPage = parseInt(this.value);
+	currentPage = 1;
+	renderTable(currentPage);
+});
+
+function sortTable(n) {
+	const keys = ['id', 'first_name', 'last_name', 'ruc', 'phone', 'address', 'plan', 'observation'];
+	const key = keys[n];
+	let dir = sortDirection[n] === "asc" ? "desc" : "asc";
+	sortDirection[n] = dir;
+	filteredClients.sort((a, b) => {
+		let x = a[key];
+		let y = b[key];
+		if (!isNaN(x) && !isNaN(y)) {
+			x = Number(x);
+			y = Number(y);
+		}
+		if (x < y) return dir === "asc" ? -1 : 1;
+		if (x > y) return dir === "asc" ? 1 : -1;
+		return 0;
+	});
+	renderTable(currentPage);
+}
+
+function attachDeleteEvents() {
+	const btns = document.getElementsByClassName('btn-danger');
+	for (let i = 0; i < btns.length; i++) {
+		btns[i].addEventListener('click', function(event) {
+			const id = this.value;
+			event.preventDefault();
+			Swal.fire({
+				title: 'Do you want to inactivate this record?',
+				text: "Once inactivated, the changes cannot be recovered.",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location.href = '../../app/delete_clients.php?id=' + id;
+				}
+			})
+		});
+	}
+}
+
+function attachEditEvents() {
+	const btns = document.getElementsByClassName('btn-edit');
+	for (let i = 0; i < btns.length; i++) {
+		btns[i].addEventListener('click', function(event) {
+			const id = this.value;
+			event.preventDefault();
+			Swal.fire({
+				title: 'Do you want to edit this record?',
+				text: "You will be redirected to a new page to edit the information.",
+				icon: 'info',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location.href = '../../views/admin/edit_clients.php?id=' + id;
+				}
+			});
+		});
+	}
+}
+
+// Inicializa la tabla solo con activos
+document.addEventListener('DOMContentLoaded', function() {
+	applyFilters();
+	renderTable(currentPage);
+});
 
 	document.getElementById('inputGroupFile02').addEventListener('change', function() {
 		var fileInput = this;
@@ -189,59 +419,6 @@ require '../../config/conexion.php';
 	});
 
 
-	for (var i = 0; i < btns.length; i++) {
-		btns[i].addEventListener('click', function() {
-			id = this.value;
-			console.log(id);
-			event.preventDefault();
-			Swal.fire({
-				title: '¿Deseas eliminar el registro?',
-				text: "Al eliminar el registro de la base de datos, no se podrá recuperar la información.",
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
-				confirmButtonText: 'Sí'
-			}).then((result) => {
-				if (result.isConfirmed) {
-
-					window.location.href = '../../app/delete_clientes.php?id=' + id;
-
-
-				}
-			})
-
-
-		})
-	}
-
-	btnsP = document.getElementsByClassName('btn-primary');
-
-	for (var i = 0; i < btns.length; i++) {
-		btnsP[i].addEventListener('click', function() {
-			id = this.value;
-			console.log(id);
-			event.preventDefault();
-			Swal.fire({
-				title: '¿Deseas editar el registro?',
-				text: "Te redireccionaremos a una nueva página para editar la información",
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
-				confirmButtonText: 'Sí'
-			}).then((result) => {
-				if (result.isConfirmed) {
-
-					window.location.href = '../../views/admin/editar_clientes.php?id=' + id;
-
-
-				}
-			})
-
-
-		})
-	}
+// ...existing code...
 </script>
 <!-- Main End -->
-<?php require '../../partials/footer.php'; ?>

@@ -56,7 +56,7 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 									</a>
 								</div>
 								<div class="col-md-4 mb-4">
-									<a href="vw_visitas.php" class="text-decoration-none text-dark">
+									<a href="visits.php" class="text-decoration-none text-dark">
 										<div class="border rounded p-4 h-100 bg-light transition-hover">
 											<i class="icon icon-phone-call2 fa-2x mb-2 d-block"></i>
 											<h5 class="font-weight-bold">Visits</h5>

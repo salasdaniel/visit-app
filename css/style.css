@@ -274,6 +274,7 @@ button{
 html * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;  
+
 }
 
 body {
@@ -616,7 +617,7 @@ ul#subFooterLinks i {
 ==================================== */
 
 .contact {
-	padding: 120px 50px;
+	padding-top: 120px;
 }
 
 .box {
