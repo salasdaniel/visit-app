@@ -41,7 +41,7 @@ if ($result) {
 }
 ?>
 <!-- Main -->
-<main>
+<main class="vh-100">
 	<div class="contact container">
 		<div class="card mb-0">
 			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">

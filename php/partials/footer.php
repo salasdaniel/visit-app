@@ -1,5 +1,5 @@
 <!-- Footer -->
-
+<div>
 <footer class="bg-light py-3">
 		<div class="container text-center">
 			<small class="text-muted">© <?php echo date('Y'); ?> daniel@noko.com.py</small>

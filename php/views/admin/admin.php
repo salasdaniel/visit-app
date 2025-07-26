@@ -16,7 +16,7 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 ?>
 
 <!-- Main -->
-<main class="d-flex flex-column" style="min-height: 92vh;">
+<main class="d-flex flex-column vh-100" >
 	<div class="contact py-5 flex-grow-1">
 		<div class="container">
 
@@ -73,6 +73,7 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 		</div> <!-- /.container -->
 	</div> <!-- /.contact -->
 
+<?php require '../../partials/footer.php'; ?>
 	
 </main>
 
@@ -88,5 +89,3 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 
 
 <!-- Main End -->
-
-<?php require '../../partials/footer.php'; ?>

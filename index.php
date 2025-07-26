@@ -25,7 +25,7 @@ if (isset($_SESSION['role'])) {
 }
 ?>
 <!-- Main -->
-<main>
+<main class="vh-100">
 	<div class="contact py-5" style="min-height: 85vh; display: flex; align-items: center;">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -56,8 +56,7 @@ if (isset($_SESSION['role'])) {
 			</div>
 		</div>
 	</div>
+	<?php require './php/partials/footer.php'; ?>
 </main>
 
 <!-- Main End -->
-
-<?php require './php/partials/footer.php'; ?>

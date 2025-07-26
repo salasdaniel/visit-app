@@ -23,7 +23,7 @@ if ($_SESSION['role'] == 1) {
                 <a class="nav-link" href="../admin/clients.php">Clients</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../admin/vw_visitas.php">Visits</a>
+                <a class="nav-link" href="../admin/visits.php">Visits</a>
             </li>
         </ul>
 
@@ -38,13 +38,13 @@ if ($_SESSION['role'] == 1) {
                 <a class="nav-link" href="admin.php">Home</a>
             </li>
             <li class="nav-item ">
-                <a class="nav-link" href="vendedores.php">Advisors</a>
+                <a class="nav-link" href="users.php">Users</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="clientes.php">Clients</a>
+                <a class="nav-link" href="clients.php">Clients</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="vw_visitas.php">Visits</a>
+                <a class="nav-link" href="visits.php">Visits</a>
             </li>
         </ul>
 
