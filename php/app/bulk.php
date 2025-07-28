@@ -1,70 +1,73 @@
 <?php
+require '../config/admin_validation.php';
 require '../../vendor/autoload.php';
 require '../config/conexion.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-$registrosNoInsertados = [];
 
-if (isset($_FILES['archivo_excel']['name'])) {
-    $nombreArchivo = $_FILES['archivo_excel']['name'];
-    $tmpNombre = $_FILES['archivo_excel']['tmp_name'];
+if (isset($_FILES['excel_file']['name'])) {
+    $file_name = $_FILES['excel_file']['name'];
+    $temp_name = $_FILES['excel_file']['tmp_name'];
 
-    // Cargar el archivo Excel
-    $spreadsheet = IOFactory::load($tmpNombre);
+    // Load the Excel file
+    $spreadsheet = IOFactory::load($temp_name);
 
-    // Obtener la hoja de trabajo
+    // Get the worksheet
     $worksheet = $spreadsheet->getActiveSheet();
-    $firstRow = true;
+    $first_row = true;
 
-    // Iterar a través de las filas y procesar en un solo ciclo
-    $duplicateDocuments = array();
-    $insertedCount = 0;
-    $firstRow = true;
+    // Iterate through rows and process in a single loop
+    $duplicate_documents = array();
+    $inserted_count = 0;
+    $first_row = true;
     foreach ($worksheet->getRowIterator() as $row) {
-        if ($firstRow) {
-            $firstRow = false;
+        if ($first_row) {
+            $first_row = false;
             continue;
         }
-        // Leer los datos de cada celda
+        // Read data from each cell
         $data = $row->getCellIterator();
-        $rowData = [];
+        $row_data = [];
         foreach ($data as $cell) {
-            $rowData[] = $cell->getValue();
+            $row_data[] = $cell->getValue();
         }
-        $first_name = $rowData[0];
-        $last_name = $rowData[1];
-        $document = $rowData[2];
-        $phone = $rowData[3];
-        $address = $rowData[4];
-        $plan = $rowData[5];
-        $observation = $rowData[6];
+        $first_name = $row_data[0];
+        $last_name = $row_data[1];
+        $document = $row_data[2];
+        $phone = $row_data[3];
+        $address = $row_data[4];
+        $plan = $row_data[5];
+        $observation = $row_data[6];
         if (validateDocument($document)) {
             try {
                 $sql = "INSERT INTO clientes (nombre, apellido, ruc, telefono, direccion, plan, observacion) VALUES ($1, $2, $3, $4, $5, $6, $7)";
                 $params = array($first_name, $last_name, $document, $phone, $address, $plan, $observation);
                 $result = pg_query_params($conn, $sql, $params);
                 if ($result) {
-                    $insertedCount++;
+                    $inserted_count++;
                 }
             } catch (Exception $e) {
-                // ...existing code...
+                $_SESSION['msg'] = 'Error inserting client: ' . $e->getMessage();
+                $_SESSION['msg_code'] = 2;
+                header("Location: ../views/admin/clients.php");
+                exit();
             }
         } else {
-            $duplicateDocuments[] = $document;
+            $duplicate_documents[] = $document;
         }
     }
 
     session_start();
-    if ($insertedCount > 0 && count($duplicateDocuments) > 0) {
-        $docs = implode(', ', $duplicateDocuments);
-        $_SESSION['msg'] = "Records added: $insertedCount; Some records were not inserted due to duplicate documents: $docs";
+    if ($inserted_count > 0 && count($duplicate_documents) > 0) {
+        $docs = implode(', ', $duplicate_documents);
+        $_SESSION['msg'] = "Records added: $inserted_count; Some records were not inserted due to duplicate documents: $docs";
         $_SESSION['msg_code'] = 2;
-    } else if ($insertedCount > 0) {
-        $_SESSION['msg'] = 'Records added: ' . $insertedCount;
+    } else if ($inserted_count > 0) {
+        $_SESSION['msg'] = 'Records added: ' . $inserted_count;
         $_SESSION['msg_code'] = 1;
-    } else if (count($duplicateDocuments) > 0) {
-        $docs = implode(', ', $duplicateDocuments);
+    } else if (count($duplicate_documents) > 0) {
+        $docs = implode(', ', $duplicate_documents);
         $_SESSION['msg'] = "No records added. Some records were not inserted due to duplicate documents: $docs";
         $_SESSION['msg_code'] = 2;
     }

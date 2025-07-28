@@ -56,6 +56,15 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 									</a>
 								</div>
 								<div class="col-md-4 mb-4">
+									<a href="products.php" class="text-decoration-none text-dark">
+										<div class="border rounded p-4 h-100 bg-light transition-hover">
+											<i class="icon icon-envelope fa-2x mb-2 d-block"></i>
+											<h5 class="font-weight-bold">Products</h5>
+											<p class="mb-0">Add, remove or view Products</p>
+										</div>
+									</a>
+								</div>
+								<div class="col-md-4 mb-4">
 									<a href="visits.php" class="text-decoration-none text-dark">
 										<div class="border rounded p-4 h-100 bg-light transition-hover">
 											<i class="icon icon-phone-call2 fa-2x mb-2 d-block"></i>
@@ -77,7 +86,7 @@ $full_name = ucfirst(strtolower($_SESSION['first_name'])) . " " . ucfirst(strtol
 	
 </main>
 
-<!-- Estilo de efecto hover -->
+<!-- hover -->
 <style>
 	.transition-hover {
 		transition: box-shadow 0.3s ease-in-out;

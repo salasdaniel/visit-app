@@ -1,5 +1,6 @@
 <?php
-session_start();
+
+require '../../config/admin_validation.php';
 require '../config/conexion.php';
 
 $first_name = trim(strtoupper($_POST['nombre']));

@@ -25,6 +25,9 @@ if ($_SESSION['role'] == 1) {
             <li class="nav-item">
                 <a class="nav-link" href="../admin/visits.php">Visits</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../admin/products.php">Products</a>
+            </li>
         </ul>
 
         <a href="../../app/logout.php"><button type="button" class="btn btn-light">Logout</button></a>
@@ -45,6 +48,9 @@ if ($_SESSION['role'] == 1) {
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="visits.php">Visits</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="products.php">Products</a>
             </li>
         </ul>
 

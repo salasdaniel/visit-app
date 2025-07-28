@@ -41,8 +41,8 @@ if ($result) {
 }
 ?>
 <!-- Main -->
-<main class="vh-100">
-	<div class="contact container">
+<main>
+	<div class="contact container" style="padding-bottom:0; flex: 1;">
 		<div class="card mb-0">
 			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
 				<strong>Visits List</strong>
@@ -122,65 +122,66 @@ if ($result) {
 				</div>
 			</div>
 		</div>
-		<?php require '../../partials/footer.php'; ?>
+	</div>
+	<?php require '../../partials/footer.php'; ?>
 </main>
 
 <script>
-const visitsData = <?php echo json_encode($visits); ?>;
-let visitsPerPage = 10;
-let currentPage = 1;
-let filteredVisits = visitsData;
-let sortDirection = {};
+	const visitsData = <?php echo json_encode($visits); ?>;
+	let visitsPerPage = 10;
+	let currentPage = 1;
+	let filteredVisits = visitsData;
+	let sortDirection = {};
 
-function applyFilters() {
-	const searchValue = document.getElementById('tableSearch').value.toLowerCase();
-	const dateStart = document.getElementById('dateStart').value;
-	const dateEnd = document.getElementById('dateEnd').value;
-	let result = visitsData.filter(visit => {
-		let matchesSearch = Object.values(visit).join(' ').toLowerCase().includes(searchValue);
-		let matchesDate = true;
-		if (dateStart) {
-			matchesDate = visit.date >= dateStart;
-		}
-		if (dateEnd) {
-			matchesDate = matchesDate && visit.date <= dateEnd;
-		}
-		return matchesSearch && matchesDate;
-	});
-	// Si hay una columna ordenada, aplicar el orden
-	if (typeof applyFilters.sortedCol !== 'undefined') {
-		const n = applyFilters.sortedCol;
-		const keys = ['id', 'client_name', 'advisor_name', 'date', 'entry_time', 'exit_time', 'duration', 'water', 'filter', 'chemicals', 'needs', 'products', 'observations'];
-		const key = keys[n];
-		let dir = sortDirection[n] || "asc";
-		result.sort((a, b) => {
-			let x = a[key];
-			let y = b[key];
-			if (key === 'date') {
-				x = new Date(x);
-				y = new Date(y);
-			} else if (!isNaN(x) && !isNaN(y)) {
-				x = Number(x);
-				y = Number(y);
+	function applyFilters() {
+		const searchValue = document.getElementById('tableSearch').value.toLowerCase();
+		const dateStart = document.getElementById('dateStart').value;
+		const dateEnd = document.getElementById('dateEnd').value;
+		let result = visitsData.filter(visit => {
+			let matchesSearch = Object.values(visit).join(' ').toLowerCase().includes(searchValue);
+			let matchesDate = true;
+			if (dateStart) {
+				matchesDate = visit.date >= dateStart;
 			}
-			if (x < y) return dir === "asc" ? -1 : 1;
-			if (x > y) return dir === "asc" ? 1 : -1;
-			return 0;
+			if (dateEnd) {
+				matchesDate = matchesDate && visit.date <= dateEnd;
+			}
+			return matchesSearch && matchesDate;
 		});
+		// If there is a sorted column, apply the sort order
+		if (typeof applyFilters.sortedCol !== 'undefined') {
+			const n = applyFilters.sortedCol;
+			const keys = ['id', 'client_name', 'advisor_name', 'date', 'entry_time', 'exit_time', 'duration', 'water', 'filter', 'chemicals', 'needs', 'products', 'observations'];
+			const key = keys[n];
+			let dir = sortDirection[n] || "asc";
+			result.sort((a, b) => {
+				let x = a[key];
+				let y = b[key];
+				if (key === 'date') {
+					x = new Date(x);
+					y = new Date(y);
+				} else if (!isNaN(x) && !isNaN(y)) {
+					x = Number(x);
+					y = Number(y);
+				}
+				if (x < y) return dir === "asc" ? -1 : 1;
+				if (x > y) return dir === "asc" ? 1 : -1;
+				return 0;
+			});
+		}
+		filteredVisits = result;
 	}
-	filteredVisits = result;
-}
 
-function renderTable(page = 1) {
-	applyFilters();
-	const start = (page - 1) * visitsPerPage;
-	const end = start + visitsPerPage;
-	const visitsToShow = filteredVisits.slice(start, end);
-	const tbody = document.getElementById('visitsTableBody');
-	tbody.innerHTML = '';
-	visitsToShow.forEach(visit => {
-		const row = document.createElement('tr');
-		row.innerHTML = `
+	function renderTable(page = 1) {
+		applyFilters();
+		const start = (page - 1) * visitsPerPage;
+		const end = start + visitsPerPage;
+		const visitsToShow = filteredVisits.slice(start, end);
+		const tbody = document.getElementById('visitsTableBody');
+		tbody.innerHTML = '';
+		visitsToShow.forEach(visit => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
 			<th scope="row" class="text-center">${visit.id}</th>
 			<td class="text-center">${visit.client_name}</td>
 			<td class="text-center">${visit.advisor_name}</td>
@@ -198,133 +199,129 @@ function renderTable(page = 1) {
 				<button type="button" class="btn btn-primary view" data-id="${visit.id}">View</button>
 			</td>
 		`;
-		tbody.appendChild(row);
-	});
-	renderPagination();
-	attachViewEvents();
-}
-
-function renderPagination() {
-	const totalPages = Math.ceil(filteredVisits.length / visitsPerPage);
-	const pagination = document.querySelector('.pagination');
-	pagination.innerHTML = '';
-	pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a></li>`;
-	for (let i = 1; i <= totalPages; i++) {
-		pagination.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
+			tbody.appendChild(row);
+		});
+		renderPagination();
+		attachViewEvents();
 	}
-	pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a></li>`;
-}
 
-function changePage(page) {
-	const totalPages = Math.ceil(filteredVisits.length / visitsPerPage);
-	if (page < 1 || page > totalPages) return;
-	currentPage = page;
-	renderTable(currentPage);
-}
+	function renderPagination() {
+		const totalPages = Math.ceil(filteredVisits.length / visitsPerPage);
+		const pagination = document.querySelector('.pagination');
+		pagination.innerHTML = '';
+		pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a></li>`;
+		for (let i = 1; i <= totalPages; i++) {
+			pagination.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
+		}
+		pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a></li>`;
+	}
 
-document.getElementById('tableSearch').addEventListener('keyup', function() {
-	currentPage = 1;
-	renderTable(currentPage);
-});
+	function changePage(page) {
+		const totalPages = Math.ceil(filteredVisits.length / visitsPerPage);
+		if (page < 1 || page > totalPages) return;
+		currentPage = page;
+		renderTable(currentPage);
+	}
 
-document.getElementById('recordsPerPage').addEventListener('change', function() {
-	visitsPerPage = parseInt(this.value);
-	currentPage = 1;
-	renderTable(currentPage);
-});
+	document.getElementById('tableSearch').addEventListener('keyup', function() {
+		currentPage = 1;
+		renderTable(currentPage);
+	});
 
-document.getElementById('dateStart').addEventListener('change', function() {
-	currentPage = 1;
-	renderTable(currentPage);
-});
-document.getElementById('dateEnd').addEventListener('change', function() {
-	currentPage = 1;
-	renderTable(currentPage);
-});
+	document.getElementById('recordsPerPage').addEventListener('change', function() {
+		visitsPerPage = parseInt(this.value);
+		currentPage = 1;
+		renderTable(currentPage);
+	});
 
-function sortTable(n) {
-	let dir = sortDirection[n] === "asc" ? "desc" : "asc";
-	sortDirection[n] = dir;
-	applyFilters.sortedCol = n;
-	renderTable(currentPage);
-}
+	document.getElementById('dateStart').addEventListener('change', function() {
+		currentPage = 1;
+		renderTable(currentPage);
+	});
+	document.getElementById('dateEnd').addEventListener('change', function() {
+		currentPage = 1;
+		renderTable(currentPage);
+	});
 
-function attachViewEvents() {
-	const btns = document.getElementsByClassName('view');
-	for (let i = 0; i < btns.length; i++) {
-		btns[i].addEventListener('click', function(event) {
-			const id = this.getAttribute('data-id');
-			event.preventDefault();
-			
-			// Buscar la visita por id
-			const visit = visitsData.find(v => v.id == id);
-			if (!visit) return;
-			
-			// Obtener imágenes válidas
-			const images = [visit.img_1, visit.img_2, visit.img_3].filter(img => img && img !== '' && img !== null);
-			
-			if (images.length === 0) {
-				alert('No images available for this visit.');
-				return;
-			}
-			
-			// Limpiar carrusel
-			const carouselInner = document.getElementById('carouselInner');
-			const carouselIndicators = document.getElementById('carouselIndicators');
-			carouselInner.innerHTML = '';
-			carouselIndicators.innerHTML = '';
-			
-			// Crear slides e indicadores
-			images.forEach((img, index) => {
-				// Crear slide
-				const slideDiv = document.createElement('div');
-				slideDiv.className = `carousel-item ${index === 0 ? 'active' : ''}`;
-				slideDiv.innerHTML = `
+	function sortTable(n) {
+		let dir = sortDirection[n] === "asc" ? "desc" : "asc";
+		sortDirection[n] = dir;
+		applyFilters.sortedCol = n;
+		renderTable(currentPage);
+	}
+
+	function attachViewEvents() {
+		const btns = document.getElementsByClassName('view');
+		for (let i = 0; i < btns.length; i++) {
+			btns[i].addEventListener('click', function(event) {
+				const id = this.getAttribute('data-id');
+				event.preventDefault();
+
+				
+				const visit = visitsData.find(v => v.id == id);
+				if (!visit) return;
+
+				// get the valid images
+				const images = [visit.img_1, visit.img_2, visit.img_3].filter(img => img && img !== '' && img !== null);
+
+				if (images.length === 0) {
+					alert('No images available for this visit.');
+					return;
+				}
+
+				// clean carrousel 
+				const carouselInner = document.getElementById('carouselInner');
+				const carouselIndicators = document.getElementById('carouselIndicators');
+				carouselInner.innerHTML = '';
+				carouselIndicators.innerHTML = '';
+
+				
+				images.forEach((img, index) => {
+					
+					const slideDiv = document.createElement('div');
+					slideDiv.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+					slideDiv.innerHTML = `
 					<img src="../../images/${img}" class="d-block w-100" alt="Visit Image ${index + 1}" 
 						 style="max-height: 500px; object-fit: contain; background: #f8f9fa;"
 						 onerror="this.onerror=null; this.src='../../images/image-not-found.jpg';">
 				`;
-				carouselInner.appendChild(slideDiv);
+					carouselInner.appendChild(slideDiv);
+
+					
+					const indicatorLi = document.createElement('li');
+					indicatorLi.setAttribute('data-target', '#visitCarousel');
+					indicatorLi.setAttribute('data-slide-to', index);
+					if (index === 0) indicatorLi.className = 'active';
+					carouselIndicators.appendChild(indicatorLi);
+				});
+
+			
+				$('#imageModal').modal('show');
+
 				
-				// Crear indicador
-				const indicatorLi = document.createElement('li');
-				indicatorLi.setAttribute('data-target', '#visitCarousel');
-				indicatorLi.setAttribute('data-slide-to', index);
-				if (index === 0) indicatorLi.className = 'active';
-				carouselIndicators.appendChild(indicatorLi);
-			});
-			
-			// Mostrar modal
-			$('#imageModal').modal('show');
-			
-			// Remover modal-backdrop automático
-			removeModalBackdrop();
-			
-			// Reinicializar carrusel
-			$('#visitCarousel').carousel('dispose');
-			$('#visitCarousel').carousel({
-				interval: false,
-				wrap: true
-			});
-		});
-	}
-}
+				removeModalBackdrop();
 
-// Función para remover modal-backdrop
-function removeModalBackdrop() {
-	setTimeout(() => {
-		const backdrop = document.querySelector('.modal-backdrop.fade.show');
-		if (backdrop) {
-			backdrop.remove();
+				$('#visitCarousel').carousel('dispose');
+				$('#visitCarousel').carousel({
+					interval: false,
+					wrap: true
+				});
+			});
 		}
-	}, 100);
-}
+	}
 
-// Inicializa la tabla
-document.addEventListener('DOMContentLoaded', function() {
-	renderTable(currentPage);
-});
+
+	function removeModalBackdrop() {
+		setTimeout(() => {
+			const backdrop = document.querySelector('.modal-backdrop.fade.show');
+			if (backdrop) {
+				backdrop.remove();
+			}
+		}, 100);
+	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		renderTable(currentPage);
+	});
 </script>
 <!-- Main -->
-
-

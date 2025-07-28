@@ -40,111 +40,111 @@ while ($user_info = pg_fetch_assoc($result)) {
 
 ?>
 <main>
-   <div class="contact d-flex flex-column justify-content-between" style="min-height: 100vh;">
-	   <div class="container flex-grow-1">
-		   <!-- Card: Formulario -->
-		   <div class="card">
-			   <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-				   <strong>Add a New User</strong>
-				   <button class="btn btn-sm btn-light toggle-card" type="button" data-target="#addUserCardBody"><i class="fa fa-chevron-down"></i></button>
-			   </div>
-			   <div class="card-body collapse show" id="addUserCardBody">
-				   <form method="POST" id="contactForm" name="contactForm" action="../../app/add_user.php">
-					   <div class="form-row">
-						   <div class="form-group col-md-4">
-							   <label for="username">Name</label>
-							   <input type="text" id="username" name="nombre" class="form-control" placeholder="Name..." required pattern="^[a-zA-Z\s.]+$">
-						   </div>
-						   <div class="form-group col-md-4">
-							   <label for="lastname">Last Name</label>
-							   <input type="text" id="lastname" name="apellido" class="form-control" placeholder="Last name..." required>
-						   </div>
-						   <div class="form-group col-md-4">
-							   <label for="document">Document Number</label>
-							   <input type="number" id="document" name="ci" class="form-control" placeholder="Document number..." required>
-						   </div>
-					   </div>
+	<div class="contact container" style="padding-bottom:0; flex: 1;">
 
-					   <div class="form-group d-flex align-items-end" style="gap: 10px;">
-						   <div class="flex-grow-1">
-							   <label for="subjectList">Role</label>
-							   <select id="subjectList" name="rol" class="form-control" style="height: 38px;">
-								   <option value="1">Administrator</option>
-								   <option value="2">Advisor</option>
-							   </select>
-						   </div>
-						   <button type="submit" name="submit" class="btn btn-primary " style="height: 38px;">
-							   Submit <i class="fa fa-paper-plane ml-2"></i>
-						   </button>
-					   </div>
-				   </form>
-			   </div>
-		   </div>
+		<!-- Card: Form -->
+		<div class="card">
+			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+				<strong>Add a New User</strong>
+				<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#addUserCardBody"><i class="fa fa-chevron-down"></i></button>
+			</div>
+			<div class="card-body collapse show" id="addUserCardBody">
+				<form method="POST" id="contactForm" name="contactForm" action="../../app/add_user.php">
+					<div class="form-row">
+						<div class="form-group col-md-4">
+							<label for="username">Name</label>
+							<input type="text" id="username" name="nombre" class="form-control" placeholder="Name..." required pattern="^[a-zA-Z\s.]+$">
+						</div>
+						<div class="form-group col-md-4">
+							<label for="lastname">Last Name</label>
+							<input type="text" id="lastname" name="apellido" class="form-control" placeholder="Last name..." required>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="document">Document Number</label>
+							<input type="number" id="document" name="ci" class="form-control" placeholder="Document number..." required>
+						</div>
+					</div>
 
-		   <!-- Card: Filtros, Tabla, Paginación -->
-		   <div class="card mb-5">
-			   <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-				   <strong>Users List</strong>
-				   <button class="btn btn-sm btn-light toggle-card" type="button" data-target="#usersListCardBody"><i class="fa fa-chevron-down"></i></button>
-			   </div>
-			   <div class="card-body collapse show" id="usersListCardBody">
-				   <div class="d-flex align-items-center gap-2 mb-3">
-					   <label for="recordsPerPage" class="mb-0 mr-2">Show</label>
-					   <select id="recordsPerPage" class="form-control mr-3" style="width: 90px;">
-						   <option value="10">10</option>
-						   <option value="20">20</option>
-						   <option value="50">50</option>
-					   </select>
-					   <input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="max-width: 250px;">
-					   <select id="activeFilter" class="form-control ml-2" style="width: 120px;">
-						   <option value="Yes">Yes</option>
-						   <option value="No">No</option>
-						   <option value="All">All</option>
-					   </select>
-				   </div>
+					<div class="form-group d-flex align-items-end" style="gap: 10px;">
+						<div class="flex-grow-1">
+							<label for="subjectList">Role</label>
+							<select id="subjectList" name="rol" class="form-control" style="height: 38px;">
+								<option value="1">Administrator</option>
+								<option value="2">Advisor</option>
+							</select>
+						</div>
+						<button type="submit" name="submit" class="btn btn-primary " style="height: 38px;">
+							Submit <i class="fa fa-paper-plane ml-2"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
 
-				   <div class="table-responsive">
-					   <table class="table table-bordered table-hover text-center" id="userTable">
-						   <thead class="thead-light">
-							   <tr>
-								   <th onclick="sortTable(0)">ID <i class="fa fa-sort"></i></th>
-								   <th onclick="sortTable(1)">Name <i class="fa fa-sort"></i></th>
-								   <th onclick="sortTable(2)">Last Name <i class="fa fa-sort"></i></th>
-								   <th onclick="sortTable(3)">Document No. <i class="fa fa-sort"></i></th>
-								   <th onclick="sortTable(4)">Role <i class="fa fa-sort"></i></th>
-								   <th onclick="sortTable(5)">Active <i class="fa fa-sort"></i></th>
-								   <th>Action</th>
-							   </tr>
-						   </thead>
-						   <tbody id="userTableBody">
-							   <!-- Rows go here -->
-						   </tbody>
-					   </table>
-				   </div>
+		<!-- Card: filters, table, pagination -->
+		<div class="card mb-5">
+			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+				<strong>Users List</strong>
+				<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#usersListCardBody"><i class="fa fa-chevron-down"></i></button>
+			</div>
+			<div class="card-body collapse show" id="usersListCardBody">
+				<div class="d-flex align-items-center gap-2 mb-3">
+					<label for="recordsPerPage" class="mb-0 mr-2">Show</label>
+					<select id="recordsPerPage" class="form-control mr-3" style="width: 90px;">
+						<option value="10">10</option>
+						<option value="20">20</option>
+						<option value="50">50</option>
+					</select>
+					<input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="max-width: 250px;">
+					<select id="activeFilter" class="form-control ml-2" style="width: 120px;">
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
+						<option value="All">All</option>
+					</select>
+				</div>
 
-				   <nav aria-label="Page navigation" class="mt-4">
-					   <ul class="pagination justify-content-center">
-						   <li class="page-item">
-							   <a class="page-link" href="?num=<?php echo ($page > 1) ? $page - 1 : 1; ?>">Previous</a>
-						   </li>
-						   <?php for ($i = 1; $i <= $pages; $i++): ?>
-							   <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-								   <a class="page-link" href="?num=<?php echo $i; ?>"><?php echo $i; ?></a>
-							   </li>
-						   <?php endfor; ?>
-						   <li class="page-item">
-							   <a class="page-link" href="?num=<?php echo ($page < $pages) ? $page + 1 : $page; ?>">Next</a>
-						   </li>
-					   </ul>
-				   </nav>
-			   </div>
-		   </div>
-	   </div>
-		   
-			   <?php require '../../partials/footer.php'; ?>
-		  
-	   </div>
-   </div>
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover text-center" id="userTable">
+						<thead class="thead-light">
+							<tr>
+								<th onclick="sortTable(0)">ID <i class="fa fa-sort"></i></th>
+								<th onclick="sortTable(1)">Name <i class="fa fa-sort"></i></th>
+								<th onclick="sortTable(2)">Last Name <i class="fa fa-sort"></i></th>
+								<th onclick="sortTable(3)">Document No. <i class="fa fa-sort"></i></th>
+								<th onclick="sortTable(4)">Role <i class="fa fa-sort"></i></th>
+								<th onclick="sortTable(5)">Active <i class="fa fa-sort"></i></th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody id="userTableBody">
+							<!-- Rows go here -->
+						</tbody>
+					</table>
+				</div>
+
+				<nav aria-label="Page navigation" class="mt-4">
+					<ul class="pagination justify-content-center">
+						<li class="page-item">
+							<a class="page-link" href="?num=<?php echo ($page > 1) ? $page - 1 : 1; ?>">Previous</a>
+						</li>
+						<?php for ($i = 1; $i <= $pages; $i++): ?>
+							<li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+								<a class="page-link" href="?num=<?php echo $i; ?>"><?php echo $i; ?></a>
+							</li>
+						<?php endfor; ?>
+						<li class="page-item">
+							<a class="page-link" href="?num=<?php echo ($page < $pages) ? $page + 1 : $page; ?>">Next</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+
+
+	</div>
+	
+	<?php require '../../partials/footer.php'; ?>
 </main>
 
 
@@ -202,7 +202,7 @@ while ($user_info = pg_fetch_assoc($result)) {
 	document.getElementById('recordsPerPage').addEventListener('change', function() {
 		usersPerPage = parseInt(this.value);
 		currentPage = 1;
-		// Filtro de estado activo/inactivo
+		
 		document.getElementById('activeFilter').addEventListener('change', function() {
 			applyFilters();
 		});
@@ -219,7 +219,7 @@ while ($user_info = pg_fetch_assoc($result)) {
 			renderTable(currentPage);
 		}
 
-		// Actualiza el filtro de búsqueda para que use applyFilters
+		
 		document.getElementById('tableSearch').addEventListener('keyup', function() {
 			applyFilters();
 		});
@@ -310,4 +310,3 @@ while ($user_info = pg_fetch_assoc($result)) {
 	renderTable(currentPage);
 </script>
 <!-- Main End -->
-

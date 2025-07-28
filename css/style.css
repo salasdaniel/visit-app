@@ -618,6 +618,7 @@ ul#subFooterLinks i {
 
 .contact {
 	padding-top: 120px;
+	min-height: calc(100vh - 56px) !important;
 }
 
 .box {

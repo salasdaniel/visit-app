@@ -6,7 +6,7 @@ require '../../partials/subheader.php';
 require '../../partials/swal.php';
 require '../../config/conexion.php';
 
-// Mostrar SweetAlert si hay mensaje de sesión
+// SweetAlert 
 
 if (isset($_SESSION['msg']) && isset($_SESSION['msg_code'])) {
 	echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
@@ -32,11 +32,9 @@ if (isset($_SESSION['msg']) && isset($_SESSION['msg_code'])) {
 }
 
 
-// Consulta principal para obtener todos los clientes
 $sql = "SELECT * FROM clientes ORDER BY id DESC";
 $result = pg_query($conn, $sql);
 
-// Construcción del array para JS
 $clients = [];
 if ($result) {
 	while ($user_info = pg_fetch_assoc($result)) {
@@ -50,7 +48,7 @@ if ($result) {
 			'plan' => $user_info['plan'],
 			'observation' => $user_info['observacion'],
 			'active' => ($user_info['activo'] === 't') ? 'Yes' : 'No'
-			
+
 		];
 	}
 }
@@ -58,15 +56,15 @@ if ($result) {
 
 ?>
 <!-- Main -->
-<main class="">
-   <div class="contact container" style="padding-bottom:0;">
-	   <!-- Form Card -->
-	   <div class="card mb-0">
-<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-	<strong>Add a New Client</strong>
-	<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#addClientCardBody"><i class="fa fa-chevron-down"></i></button>
-</div>
-<div class="card-body collapse show" id="addClientCardBody">
+<main>
+	<div class="contact container" style="padding-bottom:0; flex: 1;">
+		<!-- Form Card -->
+		<div class="card mb-0">
+			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+				<strong>Add a New Client</strong>
+				<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#addClientCardBody"><i class="fa fa-chevron-down"></i></button>
+			</div>
+			<div class="card-body collapse show" id="addClientCardBody">
 				<form method="POST" id="contactForm" name="contactForm" action="../../app/add_client.php">
 					<div class="form-row">
 						<div class="form-group col-md-3">
@@ -89,21 +87,19 @@ if ($result) {
 					<div class="form-row">
 						<div class="form-group col-md-4">
 							<label for="direccion">Address</label>
-							<input type="text" id="direccion" name="direccion" class="form-control" placeholder="742 Evergreen Terrace  
-Springfield, IL 62704  
-United States... " required>
+							<input type="text" id="direccion" name="direccion" class="form-control" placeholder="742 Evergreen Terrace  Springfield, IL 62704  United States... " required>
 						</div>
 						<div class="form-group col-md-4">
 							<label for="subjectList">Plan</label>
 							<select id="subjectList" name="plan" class="form-control" required>
 								<option disabled selected>Select a Plan</option>
 								<?php
-								$sql_planes = "SELECT * FROM planes";
-								$result_planes = pg_query($conn, $sql_planes);
-								while ($planes = pg_fetch_assoc($result_planes)) {
-									$idplan =  $planes['id'];
-									$nombre_plan =  $planes['nombre'];
-									echo "<option value='$idplan'>$nombre_plan</option>";
+								$sql_plan = "SELECT * FROM planes";
+								$result_plan = pg_query($conn, $sql_plan);
+								while ($plan = pg_fetch_assoc($result_plan)) {
+									$idplan =  $plan['id'];
+									$plan_name =  $plan['nombre'];
+									echo "<option value='$idplan'>$plan_name</option>";
 								}
 								?>
 							</select>
@@ -124,17 +120,17 @@ United States... " required>
 		</div>
 
 		<!-- Bulk Upload Section -->
-	   <div class="card mb-0">
-<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-	<strong>Bulk Upload Clients</strong>
-	<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#bulkUploadCardBody"><i class="fa fa-chevron-down"></i></button>
-</div>
-<div class="card-body collapse" id="bulkUploadCardBody">
+		<div class="card mb-0">
+			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+				<strong>Bulk Upload Clients</strong>
+				<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#bulkUploadCardBody"><i class="fa fa-chevron-down"></i></button>
+			</div>
+			<div class="card-body collapse" id="bulkUploadCardBody">
 				<form action="../../app/bulk.php" method="post" enctype="multipart/form-data">
 					<div class="form-group">
 						<label for="inputGroupFile02">Attach .xls file</label>
 						<div class="custom-file">
-							<input type="file" class="custom-file-input" id="inputGroupFile02" name="archivo_excel" required>
+							<input type="file" class="custom-file-input" id="inputGroupFile02" name="excel_file" required>
 							<label class="custom-file-label" for="inputGroupFile02">Choose file</label>
 						</div>
 					</div>
@@ -142,7 +138,7 @@ United States... " required>
 						<button type="submit" name="submit" class="btn btn-primary mr-2">
 							Process <i class="fa fa-paper-plane ml-2"></i>
 						</button>
-						<a href='../../../docs/migration_model.xlsx' class="btn btn-secondary">
+						<a href='../../../docs/clients_template.xlsx' class="btn btn-secondary">
 							Download Template
 						</a>
 					</div>
@@ -161,26 +157,26 @@ United States... " required>
 
 		<!-- Clients List -->
 		<?php if ($_SESSION['role'] == 1): ?>
-	   <div class="card mb-0">
-<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-	<strong>Clients List</strong>
-	<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#clientsListCardBody"><i class="fa fa-chevron-down"></i></button>
-</div>
-<div class="card-body collapse show" id="clientsListCardBody">
-<div class="d-flex align-items-center gap-2 mb-3">
-	<label for="recordsPerPage" class="mb-0 mr-2">Show</label>
-	<select id="recordsPerPage" class="form-control mr-3" style="width: 90px;">
-		<option value="10">10</option>
-		<option value="20">20</option>
-		<option value="50">50</option>
-	</select>
-	<input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="max-width: 250px;">
-	<select id="activeFilter" class="form-control ml-2" style="width: 120px;">
-		<option value="yes" selected>Active</option>
-		<option value="no">Inactive</option>
-		<option value="all">All</option>
-	</select>
-</div>
+			<div class="card mb-0">
+				<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+					<strong>Clients List</strong>
+					<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#clientsListCardBody"><i class="fa fa-chevron-down"></i></button>
+				</div>
+				<div class="card-body collapse show" id="clientsListCardBody">
+					<div class="d-flex align-items-center gap-2 mb-3">
+						<label for="recordsPerPage" class="mb-0 mr-2">Show</label>
+						<select id="recordsPerPage" class="form-control mr-3" style="width: 90px;">
+							<option value="10">10</option>
+							<option value="20">20</option>
+							<option value="50">50</option>
+						</select>
+						<input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="max-width: 250px;">
+						<select id="activeFilter" class="form-control ml-2" style="width: 120px;">
+							<option value="yes" selected>Active</option>
+							<option value="no">Inactive</option>
+							<option value="all">All</option>
+						</select>
+					</div>
 					<div class="table-responsive">
 						<table class="table table-bordered table-hover text-center" id="clientsTable">
 							<thead class="thead-light">
@@ -221,55 +217,55 @@ United States... " required>
 
 
 <script>
-// Toggle card content
-document.addEventListener('DOMContentLoaded', function() {
-	document.querySelectorAll('.toggle-card').forEach(function(btn) {
-		btn.addEventListener('click', function() {
-			var target = document.querySelector(this.getAttribute('data-target'));
-			if (target.classList.contains('show')) {
-				target.classList.remove('show');
-				this.innerHTML = '<i class="fa fa-chevron-right"></i>';
-			} else {
-				target.classList.add('show');
-				this.innerHTML = '<i class="fa fa-chevron-down"></i>';
-			}
+	// Toggle card content
+	document.addEventListener('DOMContentLoaded', function() {
+		document.querySelectorAll('.toggle-card').forEach(function(btn) {
+			btn.addEventListener('click', function() {
+				var target = document.querySelector(this.getAttribute('data-target'));
+				if (target.classList.contains('show')) {
+					target.classList.remove('show');
+					this.innerHTML = '<i class="fa fa-chevron-right"></i>';
+				} else {
+					target.classList.add('show');
+					this.innerHTML = '<i class="fa fa-chevron-down"></i>';
+				}
+			});
 		});
 	});
-});
 	btns = document.getElementsByClassName('btn-danger');
 	btnsP = document.getElementsByClassName('btn-primary');
-	// Obtener los datos de clientes desde PHP
 
 
-const clientsData = <?php echo json_encode($clients); ?>;
-let clientsPerPage = 10;
-let currentPage = 1;
-let filteredClients = [];
-let sortDirection = {};
 
-function applyFilters() {
-	const searchValue = document.getElementById('tableSearch').value.toLowerCase();
-	const activeValue = document.getElementById('activeFilter').value;
-	filteredClients = clientsData.filter(client => {
-		if (activeValue === 'yes' && client.active !== 'Yes') return false;
-		if (activeValue === 'no' && client.active !== 'No') return false;
-		if (activeValue === 'all') {
-			// no filter
-		}
-		if (searchValue && !Object.values(client).join(' ').toLowerCase().includes(searchValue)) return false;
-		return true;
-	});
-}
+	const clientsData = <?php echo json_encode($clients); ?>;
+	let clientsPerPage = 10;
+	let currentPage = 1;
+	let filteredClients = [];
+	let sortDirection = {};
 
-function renderTable(page = 1) {
-	const start = (page - 1) * clientsPerPage;
-	const end = start + clientsPerPage;
-	const clientsToShow = filteredClients.slice(start, end);
-	const tbody = document.getElementById('clientsTableBody');
-	tbody.innerHTML = '';
-	clientsToShow.forEach(client => {
-		const row = document.createElement('tr');
-		row.innerHTML = `
+	function applyFilters() {
+		const searchValue = document.getElementById('tableSearch').value.toLowerCase();
+		const activeValue = document.getElementById('activeFilter').value;
+		filteredClients = clientsData.filter(client => {
+			if (activeValue === 'yes' && client.active !== 'Yes') return false;
+			if (activeValue === 'no' && client.active !== 'No') return false;
+			if (activeValue === 'all') {
+				// no filter
+			}
+			if (searchValue && !Object.values(client).join(' ').toLowerCase().includes(searchValue)) return false;
+			return true;
+		});
+	}
+
+	function renderTable(page = 1) {
+		const start = (page - 1) * clientsPerPage;
+		const end = start + clientsPerPage;
+		const clientsToShow = filteredClients.slice(start, end);
+		const tbody = document.getElementById('clientsTableBody');
+		tbody.innerHTML = '';
+		clientsToShow.forEach(client => {
+			const row = document.createElement('tr');
+			row.innerHTML = `
 			<th scope="row" class="text-center">${client.id}</th>
 			<td class="text-center">${client.first_name}</td>
 			<td class="text-center">${client.last_name}</td>
@@ -286,139 +282,139 @@ function renderTable(page = 1) {
 	<button type="button" class="btn btn-primary btn-edit btn-sm" value="${client.id}" style="font-size: 12px">Edit</button>
 </td>
 		`;
-		tbody.appendChild(row);
-	});
-	renderPagination();
-	attachDeleteEvents();
-	attachEditEvents();
-}
-
-function renderPagination() {
-	const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
-	const pagination = document.querySelector('.pagination');
-	pagination.innerHTML = '';
-	pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a></li>`;
-	for (let i = 1; i <= totalPages; i++) {
-		pagination.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
+			tbody.appendChild(row);
+		});
+		renderPagination();
+		attachDeleteEvents();
+		attachEditEvents();
 	}
-	pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a></li>`;
-}
 
-function changePage(page) {
-	const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
-	if (page < 1 || page > totalPages) return;
-	currentPage = page;
-	renderTable(currentPage);
-}
-
-document.getElementById('tableSearch').addEventListener('keyup', function() {
-	applyFilters();
-	currentPage = 1;
-	renderTable(currentPage);
-});
-
-document.getElementById('activeFilter').addEventListener('change', function() {
-	applyFilters();
-	currentPage = 1;
-	renderTable(currentPage);
-});
-
-document.getElementById('recordsPerPage').addEventListener('change', function() {
-	clientsPerPage = parseInt(this.value);
-	currentPage = 1;
-	renderTable(currentPage);
-});
-
-function sortTable(n) {
-	const keys = ['id', 'first_name', 'last_name', 'ruc', 'phone', 'address', 'plan', 'observation'];
-	const key = keys[n];
-	let dir = sortDirection[n] === "asc" ? "desc" : "asc";
-	sortDirection[n] = dir;
-	filteredClients.sort((a, b) => {
-		let x = a[key];
-		let y = b[key];
-		if (!isNaN(x) && !isNaN(y)) {
-			x = Number(x);
-			y = Number(y);
+	function renderPagination() {
+		const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
+		const pagination = document.querySelector('.pagination');
+		pagination.innerHTML = '';
+		pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a></li>`;
+		for (let i = 1; i <= totalPages; i++) {
+			pagination.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
 		}
-		if (x < y) return dir === "asc" ? -1 : 1;
-		if (x > y) return dir === "asc" ? 1 : -1;
-		return 0;
+		pagination.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a></li>`;
+	}
+
+	function changePage(page) {
+		const totalPages = Math.ceil(filteredClients.length / clientsPerPage);
+		if (page < 1 || page > totalPages) return;
+		currentPage = page;
+		renderTable(currentPage);
+	}
+
+	document.getElementById('tableSearch').addEventListener('keyup', function() {
+		applyFilters();
+		currentPage = 1;
+		renderTable(currentPage);
 	});
-	renderTable(currentPage);
-}
 
-function attachDeleteEvents() {
-	const btns = document.getElementsByClassName('btn-danger');
-	for (let i = 0; i < btns.length; i++) {
-		btns[i].addEventListener('click', function(event) {
-			const id = this.value;
-			event.preventDefault();
-			Swal.fire({
-				title: 'Do you want to inactivate this record?',
-				text: "Once inactivated, the changes cannot be recovered.",
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
-				confirmButtonText: 'Yes'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					window.location.href = '../../app/delete_clients.php?id=' + id;
-				}
-			})
+	document.getElementById('activeFilter').addEventListener('change', function() {
+		applyFilters();
+		currentPage = 1;
+		renderTable(currentPage);
+	});
+
+	document.getElementById('recordsPerPage').addEventListener('change', function() {
+		clientsPerPage = parseInt(this.value);
+		currentPage = 1;
+		renderTable(currentPage);
+	});
+
+	function sortTable(n) {
+		const keys = ['id', 'first_name', 'last_name', 'ruc', 'phone', 'address', 'plan', 'observation'];
+		const key = keys[n];
+		let dir = sortDirection[n] === "asc" ? "desc" : "asc";
+		sortDirection[n] = dir;
+		filteredClients.sort((a, b) => {
+			let x = a[key];
+			let y = b[key];
+			if (!isNaN(x) && !isNaN(y)) {
+				x = Number(x);
+				y = Number(y);
+			}
+			if (x < y) return dir === "asc" ? -1 : 1;
+			if (x > y) return dir === "asc" ? 1 : -1;
+			return 0;
 		});
+		renderTable(currentPage);
 	}
-}
 
-function attachEditEvents() {
-	const btns = document.getElementsByClassName('btn-edit');
-	for (let i = 0; i < btns.length; i++) {
-		btns[i].addEventListener('click', function(event) {
-			const id = this.value;
-			event.preventDefault();
-			Swal.fire({
-				title: 'Do you want to edit this record?',
-				text: "You will be redirected to a new page to edit the information.",
-				icon: 'info',
-				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
-				confirmButtonText: 'Yes'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					window.location.href = '../../views/admin/edit_clients.php?id=' + id;
-				}
+	function attachDeleteEvents() {
+		const btns = document.getElementsByClassName('btn-danger');
+		for (let i = 0; i < btns.length; i++) {
+			btns[i].addEventListener('click', function(event) {
+				const id = this.value;
+				event.preventDefault();
+				Swal.fire({
+					title: 'Do you want to inactivate this record?',
+					text: "Once inactivated, the changes cannot be recovered.",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Yes'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = '../../app/delete_clients.php?id=' + id;
+					}
+				})
 			});
-		});
+		}
 	}
-}
 
-// Inicializa la tabla solo con activos
-document.addEventListener('DOMContentLoaded', function() {
-	applyFilters();
-	renderTable(currentPage);
-});
+	function attachEditEvents() {
+		const btns = document.getElementsByClassName('btn-edit');
+		for (let i = 0; i < btns.length; i++) {
+			btns[i].addEventListener('click', function(event) {
+				const id = this.value;
+				event.preventDefault();
+				Swal.fire({
+					title: 'Do you want to edit this record?',
+					text: "You will be redirected to a new page to edit the information.",
+					icon: 'info',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Yes'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = '../../views/admin/edit_clients.php?id=' + id;
+					}
+				});
+			});
+		}
+	}
+
+	// initalize filters and render table
+	document.addEventListener('DOMContentLoaded', function() {
+		applyFilters();
+		renderTable(currentPage);
+	});
 
 	document.getElementById('inputGroupFile02').addEventListener('change', function() {
 		var fileInput = this;
 		var fileName = fileInput.value;
 
 		if (/\.(xlsx)$/i.test(fileName)) {
-			// La extensión del archivo es .xlsx, está permitida
+			
 		} else {
-			// La extensión del archivo no es .xlsx, mostrar un mensaje de error
+			
 			Swal.fire({
 				icon: 'error',
 				title: 'Oops...',
 				text: 'Solo se permiten archivos con extensión .xlsx.',
 
 			})
-			fileInput.value = ''; // Limpiar el input de archivo
+			fileInput.value = ''; 
 		}
 	});
 
 
-// ...existing code...
+	// ...existing code...
 </script>
 <!-- Main End -->

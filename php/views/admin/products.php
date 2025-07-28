@@ -99,7 +99,7 @@ if ($result) {
                     <div class="form-group">
                         <label for="inputGroupFile02">Attach .xls file</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile02" name="archivo_excel" required>
+                            <input type="file" class="custom-file-input" id="inputGroupFile02" name="excel_file" required>
                             <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
                         </div>
                     </div>
@@ -107,7 +107,7 @@ if ($result) {
                         <button type="submit" name="submit" class="btn btn-primary mr-2">
                             Process <i class="fa fa-paper-plane ml-2"></i>
                         </button>
-                        <a href='../../../docs/products_template.xlsx' class="btn btn-secondary">
+                        <a href='../../../docs/product_template.xlsx' class="btn btn-secondary">
                             Download Template
                         </a>
                     </div>
