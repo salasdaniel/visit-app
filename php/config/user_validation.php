@@ -6,11 +6,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-if ($_SESSION['rol'] != 2 ) {
-
+if ($_SESSION['role'] != 2 ) {
     header("Location: ../../../index.php");
     exit;
-
 }
 
 ?>

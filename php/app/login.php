@@ -32,8 +32,9 @@ if (isset($_POST['ci'])) {
             // header('location:../views/admin/admin.php');
             header('location: ../views/admin/admin.php');
             exit;
-        } elseif ($role == 2) {
-            echo '<script>window.location.href = "../views/user/qr.php";</script>';
+        } else {
+            // print_r($_SESSION);
+            header('location: ../views/user/entry.php');
             exit;
         }
 
