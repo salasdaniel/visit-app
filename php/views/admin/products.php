@@ -31,9 +31,9 @@ if (isset($_SESSION['msg']) && isset($_SESSION['msg_code'])) {
 
 // Get products data
 $products = [];
-$sql = "SELECT p.id, p.nombre, p.costo, p.venta, p.activo, p.id_usuario_creacion, CONCAT(u.nombre, ' ', u.apellido) as usuario_creador
-        FROM productos p 
-        LEFT JOIN personas u ON p.id_usuario_creacion = u.id 
+$sql = "SELECT p.id, p.name, p.cost_price, p.sale_price, p.is_active, p.created_user, CONCAT(u.first_name, ' ', u.last_name) as created_user
+        FROM products p 
+        LEFT JOIN users u ON p.created_user = u.id 
         ORDER BY p.id";
 $result = pg_query($conn, $sql);
 
@@ -41,12 +41,12 @@ if ($result) {
     while ($product_info = pg_fetch_assoc($result)) {
         $products[] = [
             'id' => $product_info['id'],
-            'name' => $product_info['nombre'],
-            'cost' => $product_info['costo'],
-            'sale_price' => $product_info['venta'],
-            'created_by_id' => $product_info['id_usuario_creacion'],
-            'created_by' => $product_info['usuario_creador'] ? $product_info['usuario_creador'] : 'Unknown',
-            'active' => ($product_info['activo'] === 't') ? 'Yes' : 'No'
+            'name' => $product_info['name'],
+            'cost' => $product_info['cost_price'],
+            'sale_price' => $product_info['sale_price'],
+            'created_by_id' => $product_info['created_user'],
+            'created_by' => $product_info['created_user'] ? $product_info['created_user'] : 'Unknown',
+            'active' => ($product_info['is_active'] === 't') ? 'Yes' : 'No'
         ];
     }
 }
@@ -66,11 +66,11 @@ if ($result) {
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="product_name">Product Name</label>
-                            <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product name..." required>
+                            <input type="text" id="product_name" name="name" class="form-control" placeholder="Product name..." required>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="cost">Cost Price</label>
-                            <input type="number" id="cost" name="cost" class="form-control" placeholder="0.00" step="0.01" min="0" required>
+                            <input type="number" id="cost" name="cost_price" class="form-control" placeholder="0.00" step="0.01" min="0" required>
                         </div>
                         <div class="form-group col-md-3">
                             <label for="sale_price">Sale Price</label>

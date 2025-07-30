@@ -41,7 +41,7 @@ if (isset($_FILES['excel_file']['name'])) {
 
         if (validateDocument($product_name)) {
             try {
-                $sql = "INSERT INTO productos (nombre, costo, venta, id_usuario_creacion) VALUES ($1, $2, $3, $4)";
+                $sql = "INSERT INTO products (name, cost_price, sale_price, created_user) VALUES ($1, $2, $3, $4)";
                 $params = array($product_name, $cost_price, $sale_price, $created_user);
                 $result = pg_query_params($conn, $sql, $params);
                 if ($result) {
@@ -79,7 +79,7 @@ function validateDocument($product_name)
 {
     global $conn;
     try {
-        $sql = "SELECT 1 FROM productos WHERE nombre = $1";
+        $sql = "SELECT 1 FROM products WHERE name = $1";
         $result = pg_query_params($conn, $sql, array($product_name));
         if (pg_num_rows($result) > 0) {
             return false; // document already exists

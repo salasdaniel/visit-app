@@ -1,19 +1,19 @@
 <?php
-session_start();
+require '../config/admin_validation.php';
 require '../config/connection.php';
 
 $id = $_POST['id'];
-$first_name = trim(strtoupper($_POST['nombre']));
-$last_name = trim(strtoupper($_POST['apellido']));
-$ruc = trim($_POST['ruc']);
-$phone = trim($_POST['numero']);
-$address = strtolower($_POST['direccion']);
-$visit_day = trim(strtoupper($_POST['dia']));
-$visit_time = $_POST['hora'];
-$observation = strtolower($_POST['observacion']);
+$first_name = trim(strtoupper($_POST['first_name']));
+$last_name = trim(strtoupper($_POST['last_name']));
+$ruc = trim($_POST['tax_id']);
+$phone = trim($_POST['phone']);
+$address = strtolower($_POST['address']);
+$visit_day = trim(strtoupper($_POST['visit_day']));
+$visit_time = $_POST['visit_time'];
+$observation = strtolower($_POST['notes']);
 
-$sql = "UPDATE clientes
-            SET nombre = $1, apellido = $2, ruc = $3, telefono = $4, direccion = $5, dia_visita = $6, horario_visita = $7, observacion = $8
+$sql = "UPDATE customers
+            SET first_name = $1, last_name = $2, tax_id = $3, phone = $4, address = $5, visit_day = $6, visit_time = $7, notes = $8
             WHERE id = $9";
 $params = array($first_name, $last_name, $ruc, $phone, $address, $visit_day, $visit_time, $observation, $id);
 $result = pg_query_params($conn, $sql, $params);

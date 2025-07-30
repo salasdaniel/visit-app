@@ -1,12 +1,11 @@
 <?php
-session_start();
-require '../config/middleware.php';
+require '../config/admin_validation.php';
 require '../config/connection.php';
 
 if (isset($_POST['submit'])) {
     // Get form data
-    $name = trim($_POST['product_name']);
-    $cost = floatval($_POST['cost']);
+    $name = trim($_POST['name']);
+    $cost = floatval($_POST['cost_price']);
     $sale_price = floatval($_POST['sale_price']);
     $created_by_user_id = $_SESSION['user_id'];
 
@@ -26,7 +25,7 @@ if (isset($_POST['submit'])) {
     }
 
     // Check if product already exists
-    $check_sql = "SELECT id FROM productos WHERE LOWER(nombre) = LOWER($1)";
+    $check_sql = "SELECT id FROM products WHERE LOWER(name) = LOWER($1)";
     $check_result = pg_query_params($conn, $check_sql, array($name));
 
     if (pg_num_rows($check_result) > 0) {
@@ -36,7 +35,7 @@ if (isset($_POST['submit'])) {
         exit();
     }
     // Insert new product
-    $insert_sql = "INSERT INTO productos (nombre, costo, venta, id_usuario_creacion) 
+    $insert_sql = "INSERT INTO products (name, cost_price, sale_price, created_user) 
                    VALUES ($1, $2, $3, $4)";
     $insert_result = pg_query_params($conn, $insert_sql, array(
         $name,

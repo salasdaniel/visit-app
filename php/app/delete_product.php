@@ -1,10 +1,10 @@
 <?php
-session_start();
+require '../config/admin_validation.php';
 require '../config/connection.php';
 // Check if user is logged in
 
 $id = $_GET['id'];
-$delete_sql = "UPDATE productos SET activo = false WHERE id = $1";
+$delete_sql = "UPDATE products SET is_active = false WHERE id = $1";
 $delete_result = pg_query_params($conn, $delete_sql, array($id));
 
 if ($delete_result) {

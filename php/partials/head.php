@@ -60,14 +60,4 @@
 
     <!-- Page -->
     <div id="page">
-        <!-- Header -->
-
-        <!-- Header End -->
-
-        <!-- Sub Header -->
-        <!-- <div class="sub-header" style="margin: 0;">
-            <div class="container">
-                <h1>VISIT APP</h1>
-            </div>
-        </div> -->
-        <!-- Sub Header End -->
+     

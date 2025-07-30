@@ -9,7 +9,7 @@ require '../../config/connection.php';
 
 // Get product data
 $id = $_GET['id'];
-$sql = "SELECT * FROM productos WHERE id = $1";
+$sql = "SELECT * FROM products WHERE id = $1";
 $result = pg_query_params($conn, $sql, array($id));
 $product = pg_fetch_assoc($result);
 
@@ -30,19 +30,19 @@ $product = pg_fetch_assoc($result);
                             <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
                             <div class="form-group col-md-6">
                                 <label for="product_name">Product Name</label>
-                                <input type="text" id="product_name" name="product_name" class="form-control"
-                                    value="<?php echo htmlspecialchars($product['nombre']); ?>" required>
+                                <input type="text" id="product_name" name="name" class="form-control"
+                                    value="<?php echo htmlspecialchars($product['name']); ?>" required>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="cost">Cost Price</label>
-                                <input type="number" id="cost" name="cost" class="form-control"
-                                    value="<?php echo htmlspecialchars($product['costo'] ?? ''); ?>"
+                                <input type="number" id="cost" name="cost_price" class="form-control"
+                                    value="<?php echo htmlspecialchars($product['cost_price'] ?? ''); ?>"
                                     step="0.01" min="0" required>
                             </div>
                             <div class="form-group col-md-3">
                                 <label for="sale_price">Sale Price</label>
                                 <input type="number" id="sale_price" name="sale_price" class="form-control"
-                                    value="<?php echo htmlspecialchars($product['venta'] ?? ''); ?>"
+                                    value="<?php echo htmlspecialchars($product['sale_price'] ?? ''); ?>"
                                     step="0.01" min="0" required>
                             </div>
                         </div>
@@ -50,7 +50,7 @@ $product = pg_fetch_assoc($result);
                         <div class="form-row">
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-between">
-                                    <a href="productos.php" class="btn btn-secondary">
+                                    <a href="products.php" class="btn btn-secondary">
                                         <i class="fa fa-arrow-left mr-2"></i>Back to Products
                                     </a>
                                     <button type="submit" name="submit" class="btn btn-primary">
@@ -72,17 +72,17 @@ $product = pg_fetch_assoc($result);
                 <div class="row">
                     <div class="col-md-6">
                         <p><strong>Product ID:</strong> <?php echo htmlspecialchars($product['id']); ?></p>
-                        <p><strong>Current Cost:</strong> $<?php echo number_format($product['costo'], 2); ?></p>
-                        <p><strong>Current Sale Price:</strong> $<?php echo number_format($product['venta'], 2); ?></p>
+                        <p><strong>Current Cost:</strong> $<?php echo number_format($product['cost_price'], 2); ?></p>
+                        <p><strong>Current Sale Price:</strong> $<?php echo number_format($product['sale_price'], 2); ?></p>
                     </div>
                     <div class="col-md-6">
                         <?php
-                        $margin = $product['costo'] > 0 ? (($product['venta'] - $product['costo']) / $product['costo']) * 100 : 0;
-                        $profit = $product['venta'] - $product['costo'];
+                        $margin = $product['cost_price'] > 0 ? (($product['sale_price'] - $product['cost_price']) / $product['cost_price']) * 100 : 0;
+                        $profit = $product['sale_price'] - $product['cost_price'];
                         ?>
                         <p><strong>Profit per Unit:</strong> $<?php echo number_format($profit, 2); ?></p>
                         <p><strong>Profit Margin:</strong> <?php echo number_format($margin, 2); ?>%</p>
-                        <p><strong>Created By User ID:</strong> <?php echo htmlspecialchars($product['id_usuario_creacion']); ?></p>
+                        <p><strong>Created By User ID:</strong> <?php echo htmlspecialchars($product['created_user']); ?></p>
                     </div>
                 </div>
             </div>

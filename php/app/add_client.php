@@ -1,18 +1,18 @@
 <?php
 
-require '../../config/admin_validation.php';
+require '../config/admin_validation.php';
 require '../config/connection.php';
 
-$first_name = trim(strtoupper($_POST['nombre']));
-$last_name = trim(strtoupper($_POST['apellido']));
-$ruc = trim($_POST['ruc']);
-$phone = trim($_POST['numero']);
-$address = strtolower($_POST['direccion']);
-$plan = trim(strtoupper($_POST['plan']));
-$observation = strtolower($_POST['observacion']);
+$first_name = trim(strtoupper($_POST['first_name']));
+$last_name = trim(strtoupper($_POST['last_name']));
+$ruc = trim($_POST['tax_id']);
+$phone = trim($_POST['phone']);
+$address = strtolower($_POST['address']);
+$plan = trim(strtoupper($_POST['subscription_plan']));
+$observation = strtolower($_POST['notes']);
 
 // Check if client already exists
-$sql_check = "SELECT * FROM clientes WHERE ruc = $1";
+$sql_check = "SELECT * FROM customers WHERE tax_id = $1";
 $result_check = pg_query_params($conn, $sql_check, array($ruc));
 
 if (pg_num_rows($result_check) > 0) {
@@ -23,7 +23,7 @@ if (pg_num_rows($result_check) > 0) {
 }
 
 // Insert new client (id is auto-generated)
-$sql_insert = "INSERT INTO clientes (nombre, apellido, ruc, telefono, direccion, plan, observacion) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+$sql_insert = "INSERT INTO customers (first_name, last_name, tax_id, phone, address, subscription_plan, notes) VALUES ($1, $2, $3, $4, $5, $6, $7)";
 $params = array($first_name, $last_name, $ruc, $phone, $address, $plan, $observation);
 $result_insert = pg_query_params($conn, $sql_insert, $params);
 

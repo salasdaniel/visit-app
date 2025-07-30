@@ -41,7 +41,7 @@ if (isset($_FILES['excel_file']['name'])) {
         $observation = $row_data[6];
         if (validateDocument($document)) {
             try {
-                $sql = "INSERT INTO clientes (nombre, apellido, ruc, telefono, direccion, plan, observacion) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+                $sql = "INSERT INTO customers (first_name, last_name, tax_id, phone, address, subscription_plan, notes) VALUES ($1, $2, $3, $4, $5, $6, $7)";
                 $params = array($first_name, $last_name, $document, $phone, $address, $plan, $observation);
                 $result = pg_query_params($conn, $sql, $params);
                 if ($result) {
@@ -79,7 +79,7 @@ if (isset($_FILES['excel_file']['name'])) {
 function validateDocument($document) {
     global $conn;
     try {
-        $sql = "SELECT 1 FROM clientes WHERE ruc = $1";
+        $sql = "SELECT 1 FROM customers WHERE tax_id = $1";
         $result = pg_query_params($conn, $sql, array($document));
         if (pg_num_rows($result) > 0) {
             return false; // document already exists

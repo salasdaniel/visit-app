@@ -21,21 +21,21 @@ if ($result) {
 	while ($row = pg_fetch_assoc($result)) {
 		$visits[] = [
 			'id' => $row['id'],
-			'client_name' => ucfirst(strtolower($row['cliente_nombre'] ?? '')) . ' ' . ucfirst(strtolower($row['cliente_apellido'] ?? '')),
-			'advisor_name' => ucfirst(strtolower($row['persona_nombre'] ?? '')) . ' ' . ucfirst(strtolower($row['persona_apellido'] ?? '')),
-			'date' => $row['fecha'],
-			'entry_time' => $row['hora_ingreso'],
-			'exit_time' => $row['hora_salida'],
-			'duration' => $row['tiempo_visita'],
-			'water' => ($row['agua'] === 'true' ) ? 'Yes' : 'No',
-			'filter' => ($row['filtro'] === 'true' ) ? 'Yes' : 'No',
-			'chemicals' => ($row['quimicos'] === 'true' ) ? 'Yes' : 'No',
-			'needs' => ($row['necesita_productos'] === 'true' ) ? 'Yes' : 'No',
-			'products' => ($row['productos'] === null || $row['productos'] === '') ? 'No Needs' : $row['productos'],
-			'observations' => ($row['observaciones'] === null || $row['observaciones'] === '') ? 'No Obs.' : $row['observaciones'],
-			'img_1' => $row['img_1'],
-			'img_2' => $row['img_2'],
-			'img_3' => $row['img_3']
+			'client_name' => ucfirst(strtolower($row['customer_name'] ?? '')) . ' ' . ucfirst(strtolower($row['customer_lastname'] ?? '')),
+			'advisor_name' => ucfirst(strtolower($row['user_name'] ?? '')) . ' ' . ucfirst(strtolower($row['user_lastname'] ?? '')),
+			'date' => $row['visit_date'],
+			'entry_time' => $row['check_in_time'],
+			'exit_time' => $row['check_out_time'],
+			'duration' => $row['visit_duration'],
+			'water' => ($row['needs_water'] === 'true' ) ? 'Yes' : 'No',
+			'filter' => ($row['needs_filter'] === 'true' ) ? 'Yes' : 'No',
+			'chemicals' => ($row['needs_chemicals'] === 'true' ) ? 'Yes' : 'No',
+			'needs' => ($row['needs_products'] === 'true' ) ? 'Yes' : 'No',
+			'products' => ($row['products'] === null || $row['products'] === '') ? 'No Needs' : $row['products'],
+			'observations' => ($row['notes'] === null || $row['notes'] === '') ? 'No Obs.' : $row['notes'],
+			'img_1' => $row['image_1'],
+			'img_2' => $row['image_2'],
+			'img_3' => $row['image_3']
 		];
 	}
 }

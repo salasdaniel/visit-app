@@ -32,7 +32,7 @@ if (isset($_SESSION['msg']) && isset($_SESSION['msg_code'])) {
 }
 
 
-$sql = "SELECT * FROM clientes ORDER BY id DESC";
+$sql = "SELECT * FROM customers ORDER BY id DESC";
 $result = pg_query($conn, $sql);
 
 $clients = [];
@@ -40,14 +40,14 @@ if ($result) {
 	while ($user_info = pg_fetch_assoc($result)) {
 		$clients[] = [
 			'id' => $user_info['id'],
-			'first_name' => ucfirst(strtolower($user_info['nombre'])),
-			'last_name' => ucfirst(strtolower($user_info['apellido'])),
-			'ruc' => $user_info['ruc'],
-			'phone' => $user_info['telefono'],
-			'address' => $user_info['direccion'],
-			'plan' => $user_info['plan'],
-			'observation' => $user_info['observacion'],
-			'active' => ($user_info['activo'] === 't') ? 'Yes' : 'No'
+			'first_name' => ucfirst(strtolower($user_info['first_name'])),
+			'last_name' => ucfirst(strtolower($user_info['last_name'])),
+			'ruc' => $user_info['tax_id'],
+			'phone' => $user_info['phone'],
+			'address' => $user_info['address'],
+			'plan' => $user_info['subscription_plan'],
+			'observation' => $user_info['notes'],
+			'active' => ($user_info['is_active'] === 't') ? 'Yes' : 'No'
 
 		];
 	}
@@ -69,36 +69,36 @@ if ($result) {
 					<div class="form-row">
 						<div class="form-group col-md-3">
 							<label for="username">First Name</label>
-							<input type="text" id="username" name="nombre" class="form-control" placeholder="John... " required pattern="^[a-zA-Z\s.]+$">
+							<input type="text" id="username" name="first_name" class="form-control" placeholder="John... " required pattern="^[a-zA-Z\s.]+$">
 						</div>
 						<div class="form-group col-md-3">
 							<label for="apellido">Last Name</label>
-							<input type="text" id="apellido" name="apellido" class="form-control" placeholder="Smith..." required>
+							<input type="text" id="apellido" name="last_name" class="form-control" placeholder="Smith..." required>
 						</div>
 						<div class="form-group col-md-3">
 							<label for="ruc">ID or Passport</label>
-							<input type="text" id="ruc" name="ruc" class="form-control" placeholder="202-555-0173 " required>
+							<input type="text" id="ruc" name="tax_id" class="form-control" placeholder="202-555-0173 " required>
 						</div>
 						<div class="form-group col-md-3">
 							<label for="phone">Contact Number</label>
-							<input type="text" id="phone" name="numero" class="form-control" placeholder="+1 202-555-0173" required>
+							<input type="text" id="phone" name="phone" class="form-control" placeholder="+1 202-555-0173" required>
 						</div>
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-4">
 							<label for="direccion">Address</label>
-							<input type="text" id="direccion" name="direccion" class="form-control" placeholder="742 Evergreen Terrace  Springfield, IL 62704  United States... " required>
+							<input type="text" id="direccion" name="address" class="form-control" placeholder="742 Evergreen Terrace  Springfield, IL 62704  United States... " required>
 						</div>
 						<div class="form-group col-md-4">
 							<label for="subjectList">Plan</label>
-							<select id="subjectList" name="plan" class="form-control" required>
+							<select id="subjectList" name="subscription_plan" class="form-control" required>
 								<option disabled selected>Select a Plan</option>
 								<?php
-								$sql_plan = "SELECT * FROM planes";
+								$sql_plan = "SELECT * FROM plans";
 								$result_plan = pg_query($conn, $sql_plan);
 								while ($plan = pg_fetch_assoc($result_plan)) {
 									$idplan =  $plan['id'];
-									$plan_name =  $plan['nombre'];
+									$plan_name =  $plan['name'];
 									echo "<option value='$idplan'>$plan_name</option>";
 								}
 								?>
@@ -106,7 +106,7 @@ if ($result) {
 						</div>
 						<div class="form-group col-md-4 ">
 							<label for="hora" class="">Observations</label>
-							<input type="text" id="hora" name="observacion" class="form-control" placeholder="Visit on sunday..." required>
+							<input type="text" id="hora" name="notes" class="form-control" placeholder="Visit on sunday..." required>
 
 						</div>
 						<div class="d-flex justify-content-end align-items-end w-100">

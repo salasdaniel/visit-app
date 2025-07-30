@@ -20,21 +20,21 @@ $start = ($page > 1) ? ($page - 1) * $per_page : 0;
 
 // Total records
 // Get paginated users
-$sql = "SELECT p.id, p.nombre, p.apellido, p.ci, roles.rol, p.activo
-						FROM personas p
-						INNER JOIN roles ON p.rol = roles.id
-						ORDER BY p.id DESC";
+$sql = "SELECT u.id, u.first_name, u.last_name, u.document_number, roles.role_name, u.is_active
+						FROM users u
+						INNER JOIN roles ON u.role = roles.id
+						ORDER BY u.id DESC";
 $result = pg_query($conn, $sql);
 
 $users = [];
 while ($user_info = pg_fetch_assoc($result)) {
 	$users[] = [
 		'id' => $user_info['id'],
-		'name' => ucfirst(strtolower($user_info['nombre'])),
-		'lastname' => ucfirst(strtolower($user_info['apellido'])),
-		'document' => $user_info['ci'],
-		'role' => ucfirst(strtolower($user_info['rol'])),
-		'active' => ($user_info['activo'] === 't') ? 'Yes' : 'No'
+		'name' => ucfirst(strtolower($user_info['first_name'])),
+		'lastname' => ucfirst(strtolower($user_info['last_name'])),
+		'document' => $user_info['document_number'],
+		'role' => ucfirst(strtolower($user_info['role_name'])),
+		'active' => ($user_info['is_active'] === 't') ? 'Yes' : 'No'
 	];
 }
 
@@ -53,23 +53,23 @@ while ($user_info = pg_fetch_assoc($result)) {
 					<div class="form-row">
 						<div class="form-group col-md-4">
 							<label for="username">Name</label>
-							<input type="text" id="username" name="nombre" class="form-control" placeholder="Name..." required pattern="^[a-zA-Z\s.]+$">
+							<input type="text" id="username" name="first_name" class="form-control" placeholder="Name..." required pattern="^[a-zA-Z\s.]+$">
 						</div>
 						<div class="form-group col-md-4">
 							<label for="lastname">Last Name</label>
-							<input type="text" id="lastname" name="apellido" class="form-control" placeholder="Last name..." required>
+							<input type="text" id="lastname" name="last_name" class="form-control" placeholder="Last name..." required>
 						</div>
 						<div class="form-group col-md-4">
 							<label for="document">Document Number</label>
-							<input type="number" id="document" name="ci" class="form-control" placeholder="Document number..." required>
+							<input type="number" id="document" name="document_number" class="form-control" placeholder="Document number..." required>
 						</div>
 					</div>
 
 					<div class="form-group d-flex align-items-end" style="gap: 10px;">
 						<div class="flex-grow-1">
 							<label for="subjectList">Role</label>
-							<select id="subjectList" name="rol" class="form-control" style="height: 38px;">
-								<option value="1">Administrator</option>
+							<select id="subjectList" name="role" class="form-control" style="height: 38px;">
+								<option value="1">Admin</option>
 								<option value="2">Advisor</option>
 							</select>
 						</div>
@@ -97,9 +97,9 @@ while ($user_info = pg_fetch_assoc($result)) {
 					</select>
 					<input type="text" id="tableSearch" class="form-control" placeholder="Search..." style="max-width: 250px;">
 					<select id="activeFilter" class="form-control ml-2" style="width: 120px;">
+						<option value="All">All</option>
 						<option value="Yes">Yes</option>
 						<option value="No">No</option>
-						<option value="All">All</option>
 					</select>
 				</div>
 
@@ -168,7 +168,7 @@ while ($user_info = pg_fetch_assoc($result)) {
 	const usersData = <?php echo json_encode($users); ?>;
 	let usersPerPage = 10;
 	let currentPage = 1;
-	let filteredUsers = usersData.filter(user => user.active === 'Yes');
+	let filteredUsers = usersData.filter(user => user.active === 'Yes'); // Mostrar todos inicialmente
 	let sortDirection = {};
 
 	function renderTable(page = 1) {
@@ -202,30 +202,29 @@ while ($user_info = pg_fetch_assoc($result)) {
 	document.getElementById('recordsPerPage').addEventListener('change', function() {
 		usersPerPage = parseInt(this.value);
 		currentPage = 1;
-		
-		document.getElementById('activeFilter').addEventListener('change', function() {
-			applyFilters();
-		});
-
-		function applyFilters() {
-			const filter = document.getElementById('tableSearch').value.toLowerCase();
-			const activeValue = document.getElementById('activeFilter').value;
-			filteredUsers = usersData.filter(user => {
-				const matchesSearch = Object.values(user).join(' ').toLowerCase().includes(filter);
-				const matchesActive = (activeValue === 'All') || (user.active === activeValue);
-				return matchesSearch && matchesActive;
-			});
-			currentPage = 1;
-			renderTable(currentPage);
-		}
-
-		
-		document.getElementById('tableSearch').addEventListener('keyup', function() {
-			applyFilters();
-		});
-
 		renderTable(currentPage);
 	});
+
+	document.getElementById('activeFilter').addEventListener('change', function() {
+		applyFilters();
+	});
+
+	document.getElementById('tableSearch').addEventListener('keyup', function() {
+		applyFilters();
+	});
+
+	function applyFilters() {
+		const filter = document.getElementById('tableSearch').value.toLowerCase();
+		const activeValue = document.getElementById('activeFilter').value;
+		
+		filteredUsers = usersData.filter(user => {
+			const matchesSearch = Object.values(user).join(' ').toLowerCase().includes(filter);
+			const matchesActive = (activeValue === 'All') || (user.active === activeValue);
+			return matchesSearch && matchesActive;
+		});
+		currentPage = 1;
+		renderTable(currentPage);
+	}
 
 	function renderPagination() {
 		const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
@@ -252,19 +251,7 @@ while ($user_info = pg_fetch_assoc($result)) {
 	}
 
 
-	// Dynamic search
-	document.getElementById('tableSearch').addEventListener('keyup', function() {
-		const filter = this.value.toLowerCase();
-		filteredUsers = usersData.filter(user =>
-			Object.values(user).join(' ').toLowerCase().includes(filter)
-		);
-		currentPage = 1;
-		renderTable(currentPage);
-	});
-
 	// Sorting
-
-
 	function sortTable(n) {
 		const keys = ['id', 'name', 'lastname', 'document', 'role', 'active'];
 		const key = keys[n];

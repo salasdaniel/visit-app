@@ -1,9 +1,9 @@
 <?php
-session_start();
+require '../config/admin_validation.php';
 require '../config/connection.php';
 
 $id = $_GET['id'];
-$sql = "UPDATE clientes SET activo = false WHERE id = $1";
+$sql = "UPDATE customers SET is_active = false WHERE id = $1";
 $result = pg_query_params($conn, $sql, array($id));
 pg_close($conn);
 
