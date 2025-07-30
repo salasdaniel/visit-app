@@ -10,13 +10,15 @@ require '../config/connection.php';
 // Initialize products array
 $selected_products = array();
 
-// Process products: look for 'producto{id}' and 'cantidad{id}' pairs
+// print_r($_POST['products']);
+
+// Process products: look for 'product{id}' and 'quantity{id}' pairs
 foreach ($_POST as $key => $value) {
-    // Check if it's a product name field (producto{id})
-    if (strpos($key, 'producto') === 0) {
-        // Extract the product ID from the key (e.g., 'producto4' -> '4')
-        $product_id = substr($key, 8); // Remove 'producto' prefix
-        $quantity_key = 'cantidad' . $product_id;
+    // Check if it's a product name field (product{id})
+    if (strpos($key, 'product') === 0) {
+        // Extract the product ID from the key (e.g., 'product4' -> '4')
+        $product_id = substr($key, 7); // Remove 'product' prefix
+        $quantity_key = 'quantity' . $product_id;
         
         // Check if the corresponding quantity exists and is greater than 0
         if (isset($_POST[$quantity_key]) && intval($_POST[$quantity_key]) > 0) {
@@ -37,9 +39,6 @@ if (!empty($selected_products)) {
     $products_string = implode(', ', $product_strings);
 }
 
-echo'<pre>';
-var_dump($products_string);
-echo'</pre>';
 
 
 $_SESSION['products'] = $products_string;
@@ -53,9 +52,6 @@ if (isset($_POST['observations'])){
     $_SESSION['observations'] = $_POST['observations'];
 }
     
-echo'<pre>';
-var_dump($_SESSION);
-echo'</pre>';
 
 $destination_folder = '../../images/';
 
@@ -70,7 +66,6 @@ if (!file_exists($destination_folder)) {
 
 // Generate base filename with date format: DDMMAAXX
 $date_prefix = date('dmyy'); // Format: day(2) + month(2) + year(2)
-print_r("<!-- Date prefix generated: $date_prefix (Format: DDMMYY) -->");
 
 // Function to generate unique filename with sequence
 function generateUniqueFilename($destination_folder, $date_prefix, $sequence, $extension) {
@@ -121,32 +116,27 @@ for ($i = 1; $i <= count($_FILES); $i++) {
 
         if (move_uploaded_file($_FILES[$file_key]['tmp_name'], $new_filename)) {
             $_SESSION[$file_key] = $new_filename;
-            print_r("<!-- Image $i renamed: '$original_name' -> '" . basename($new_filename) . "' -->");
             $current_sequence++; // Increment for next file
         } else {
-            print_r("Error uploading or renaming image $i.<br>");
-            $_SESSION['msg'] = $errors;
+         
+            $_SESSION['msg'] = "Error uploading or renaming image $i.<br>";
             $_SESSION['msg_code'] = 2; // Mark that an error has occurred
             die(); // Stop execution and show error message
         }
     } else {
-        print_r("Error uploading image $i.<br>");
-        $_SESSION['msg'] = $errors;
+        $_SESSION['msg'] = "Error uploading image $i.<br>";
         $_SESSION['msg_code'] = 2; // Mark that an error has occurred
         die(); // Stop execution and show error message
     }
 }
 
-if ($errors) {
-    // You can log the error here if necessary
-
-    $_SESSION['msg'] = $errors;
-    $_SESSION['msg_code'] = 2;
+if (isset($_SESSION['msg']) && isset($_SESSION['msg_code'])) {
+   
     error_log("Errors were found while uploading images.");
-    // You can redirect to an error page if desired
     header("Location: error_page.php");
+    
 } else {
-    // No errors found, redirect to desired page
+
     header("Location: ../views/user/exit.php");
 }
 
@@ -160,11 +150,6 @@ function getProductsString() {
     return isset($_SESSION['products']) ? $_SESSION['products'] : '';
 }
 
-// Example usage:
-// $products_array = getSelectedProducts();
-// foreach ($products_array as $product) {
-//     print_r"Product: " . $product[0] . ", Quantity: " . $product[1] . "\n";
-// }
 
 ?>
 

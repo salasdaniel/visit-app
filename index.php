@@ -40,8 +40,8 @@ if (isset($_SESSION['role'])) {
 							<form method="POST" id="contactForm" name="contactForm" action="php/app/login.php">
 								<div class="form-group d-flex align-items-end" style="gap: 10px;">
 									<div class="flex-grow-1">
-										<label for="ci">Document Number</label>
-										<input id="ci" name="ci" type="number" class="form-control" required>
+										<label for="document">Document Number</label>
+										<input id="document" name="document" type="number" class="form-control" required>
 									</div>
 									<button type="submit" name="submit" class="btn btn-primary"
 										style="height: 35px;">

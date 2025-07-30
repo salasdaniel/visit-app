@@ -39,7 +39,7 @@ if (isset($_SESSION['upload_error'])) {
 }
 
 // PostgreSQL query to get all products
-$query = "SELECT * FROM productos ORDER BY nombre ASC";
+$query = "SELECT * FROM products ORDER BY name ASC";
 $result = pg_query($conn, $query);
 
 if (!$result) {
@@ -75,7 +75,7 @@ if (!$result) {
 		</div>
 
 		<!-- Visit Data Card -->
-		<div class="card mb-0" id="seccion2" style="display: none;">
+		<div class="card mb-0" id="section2" style="display: none;">
 			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
 				<strong><i class="fa fa-clipboard-list mr-2"></i>2. Visit Data</strong>
 				<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#visitDataCardBody"><i class="fa fa-chevron-down"></i></button>
@@ -111,7 +111,7 @@ if (!$result) {
 		</div>
 
 		<!-- Photographic Records Card -->
-		<div class="card mb-0" id="seccion3" style="display: none;">
+		<div class="card mb-0" id="section3" style="display: none;">
 			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
 				<strong><i class="fa fa-images mr-2"></i>3. Photographic Records</strong>
 				<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#photoCardBody"><i class="fa fa-chevron-down"></i></button>
@@ -145,7 +145,7 @@ if (!$result) {
 		</div>
 
 		<!-- Client Needs Card -->
-		<div class="card mb-0" id="seccion4" style="display: none;">
+		<div class="card mb-0" id="section4" style="display: none;">
 			<div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
 				<strong><i class="fa fa-shopping-cart mr-2"></i>4. Client Needs</strong>
 				<button class="btn btn-sm btn-light toggle-card" type="button" data-target="#clientNeedsCardBody"><i class="fa fa-chevron-down"></i></button>
@@ -153,7 +153,7 @@ if (!$result) {
 			<div class="card-body collapse show" id="clientNeedsCardBody">
 				<div class="form-row">
 					<div class="form-group col-md-12">
-						<label for="producto">The customer needs products?</label>
+						<label for="product">The customer needs products?</label>
 						<select class="form-control" name="question_4" id="products" required>
 							<option selected disabled value=''>Select an option...</option>
 							<option value="true">Yes</option>
@@ -177,12 +177,12 @@ if (!$result) {
 					<?php
 					while ($products = pg_fetch_assoc($result)) {
 						$id = $products['id'];
-						$name = $products['nombre'];
+						$name = $products['name'];
 					?>
 						<div class="flex-row align-items-center py-2 border-bottom">
 							<div style="display: flex; justify-content: space-between; align-items: center;">
 								<span class="product-name"><?php echo htmlspecialchars($name) ?></span>
-								<input type="hidden" name="producto<?php echo $id ?>" value="<?php echo htmlspecialchars($name) ?>">
+								<input type="hidden" name="product<?php echo $id ?>" value="<?php echo htmlspecialchars($name) ?>">
 								<!-- <small class="text-muted qty-display">0 qty</small> -->
 
 								<!-- </div>
@@ -195,7 +195,7 @@ if (!$result) {
 									</div>
 									<input type="number" class="form-control text-center product-quantity" style="font-size: 12px;"
 										value="0" min="0" max="999"
-										name="cantidad<?php echo $id ?>"
+										name="quantity<?php echo $id ?>"
 										data-product="<?php echo $id ?>">
 									<div class="input-group-append">
 										<button class="btn btn-primary btn-increase" type="button" data-product="<?php echo $id ?>">
@@ -274,9 +274,9 @@ if (!$result) {
 
 		// Progressive form reveal on first image upload
 		$('#img1').change(function(input) {
-			$('#seccion2').slideDown(500)
-			$('#seccion3').slideDown(500)
-			$('#seccion4').slideDown(500)
+			$('#section2').slideDown(500)
+			$('#section3').slideDown(500)
+			$('#section4').slideDown(500)
 			$('#btn').slideDown(500)
 		})
 
@@ -360,9 +360,9 @@ if (!$result) {
 			}
 		}
 
-		// Optimize form submission - only send products with quantity > 0
+		// Optimize form submission - send all products but only log selected ones
 		$('#contactForm').on('submit', function(e) {
-			console.log('Form submission intercepted for optimization');
+			console.log('Form submission starting...');
 			
 			// Get all product quantity inputs
 			const productInputs = $('.product-quantity');
@@ -376,18 +376,14 @@ if (!$result) {
 					selectedProducts.push({
 						id: productId,
 						quantity: quantity,
-						name: $(`input[name="producto${productId}"]`).val()
+						name: $(`input[name="product${productId}"]`).val()
 					});
-				} else {
-					// Remove inputs for products with 0 quantity to optimize payload
-					$(`input[name="producto${productId}"]`).remove();
-					$(`input[name="cantidad${productId}"]`).remove();
 				}
+				// Don't remove any inputs - let server handle filtering
 			});
 			
-			// Log optimization results
 			console.log('Selected products for submission:', selectedProducts);
-			console.log(`Optimized: Sending ${selectedProducts.length} products instead of ${productInputs.length}`);
+			console.log(`Total products: ${productInputs.length}, Selected: ${selectedProducts.length}`);
 			
 			// Continue with normal form submission
 			return true;

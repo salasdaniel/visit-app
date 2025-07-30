@@ -13,9 +13,9 @@ try {
     
 
     // PostgreSQL query with parameterized statement
-    $query = "SELECT id, nombre, apellido, ruc, telefono, direccion, observacion 
-              FROM clientes 
-              WHERE id = $1 AND activo = true";
+    $query = "SELECT id, first_name, last_name, tax_id, phone, address, notes 
+              FROM customers 
+              WHERE id = $1 AND is_active = true";
     
     $result = pg_query_params($conn, $query, array($client_id));
     
@@ -28,12 +28,12 @@ try {
 
     // Store client information in session 
     $_SESSION['client_id'] = $client_info['id'];
-    $_SESSION['client_name'] = $client_info['nombre'] ?? '';
-    $_SESSION['client_lastname'] = $client_info['apellido'] ?? '';
-    $_SESSION['client_ruc'] = $client_info['ruc'] ?? '';
-    $_SESSION['client_phone'] = $client_info['telefono'] ?? '';
-    $_SESSION['client_address'] = $client_info['direccion'] ?? '';
-    $_SESSION['client_observation'] = $client_info['observacion'] ?? '';
+    $_SESSION['client_name'] = $client_info['first_name'] ?? '';
+    $_SESSION['client_lastname'] = $client_info['last_name'] ?? '';
+    $_SESSION['client_ruc'] = $client_info['tax_id'] ?? '';
+    $_SESSION['client_phone'] = $client_info['phone'] ?? '';
+    $_SESSION['client_address'] = $client_info['address'] ?? '';
+    $_SESSION['client_observation'] = $client_info['notes'] ?? '';
 
     // Clean up resources
     pg_free_result($result);

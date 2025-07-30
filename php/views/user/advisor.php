@@ -10,19 +10,19 @@
 	$_SESSION['entry_time'] = date("H:i:s");
 	$_SESSION['date'] = date("Y-m-d");
 
-	// Crear array de clientes para JavaScript
-	$clientes_array = array();
-	$query = "SELECT id, nombre, apellido FROM clientes WHERE activo = true ORDER BY nombre ASC";
+	// create cliuents array for JavaScript
+	$customers_array = array();
+	$query = "SELECT id, first_name, last_name FROM customers WHERE is_active = true ORDER BY first_name ASC";
 	$result = pg_query($conn, $query);
 	
 	if ($result) {
-		while ($info_usuario = pg_fetch_assoc($result)) {
-			$id = $info_usuario['id'];
-			$first_name= $info_usuario['nombre'];
-			$last_name = $info_usuario['apellido'];
+		while ($user_info = pg_fetch_assoc($result)) {
+			$id = $user_info['id'];
+			$first_name= $user_info['first_name'];
+			$last_name = $user_info['last_name'];
 			$full_name = ucfirst(strtolower(preg_replace('/[^a-zA-Z0-9\s]/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $first_name)))) . " " . ucfirst(strtolower(preg_replace('/[^a-zA-Z0-9\s]/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $last_name))));
 			
-			$clientes_array[] = array(
+			$customers_array[] = array(
 				'id' => $id,
 				'full_name' => $full_name,
 				'search_text' => strtolower($full_name)
@@ -70,18 +70,17 @@
 	</main>
 	<!-- Main End -->
 
-	
 
 
 	<script>
-		// Array de clientes desde PHP
-		const clientes = <?php echo json_encode($clientes_array); ?>;
+		// JS customers array
+		const customers = <?php echo json_encode($customers_array); ?>;
 		
 		// Toggle card content
 		document.addEventListener('DOMContentLoaded', function() {
 			
 
-			// Funcionalidad de búsqueda de clientes
+			// search
 			const searchInput = document.getElementById('search_client');
 			const searchResults = document.getElementById('search_results');
 			const hiddenInput = document.getElementById('client_id');
@@ -90,7 +89,7 @@
 			searchInput.addEventListener('input', function() {
 				const query = this.value.toLowerCase().trim();
 				
-				// Limpiar resultados si hay menos de 3 caracteres
+				// clean up results 
 				if (query.length < 3) {
 					searchResults.style.display = 'none';
 					searchResults.innerHTML = '';
@@ -99,22 +98,22 @@
 					return;
 				}
 
-				// Filtrar clientes que coincidan con la búsqueda
-				const matches = clientes.filter(cliente => 
-					cliente.search_text.includes(query)
+				// filter customers that match the search
+				const matches = customers.filter(customer => 
+					customer.search_text.includes(query)
 				);
 
-				// Mostrar resultados
+				// show results
 				if (matches.length > 0) {
 					searchResults.innerHTML = '';
-					matches.forEach(cliente => {
+					matches.forEach(customer => {
 						const item = document.createElement('button');
 						item.type = 'button';
 						item.className = 'list-group-item list-group-item-action';
-						item.textContent = cliente.full_name;
+						item.textContent = customer.full_name;
 						item.addEventListener('click', function() {
-							searchInput.value = cliente.full_name;
-							hiddenInput.value = cliente.id;
+							searchInput.value = customer.full_name;
+							hiddenInput.value = customer.id;
 							searchResults.style.display = 'none';
 							submitBtn.disabled = false;
 						});
@@ -129,7 +128,7 @@
 				}
 			});
 
-			// Ocultar resultados al hacer clic fuera
+			// hide results when clicking outside
 			document.addEventListener('click', function(event) {
 				if (!searchInput.contains(event.target) && !searchResults.contains(event.target)) {
 					searchResults.style.display = 'none';

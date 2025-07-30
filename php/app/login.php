@@ -2,10 +2,10 @@
 
 require '../config/connection.php';
 
-if (isset($_POST['ci'])) {
+if (isset($_POST['document'])) {
 
-    $document_number = $_POST['ci'];
-    $sql = "SELECT * FROM personas WHERE ci = $1";
+    $document_number = $_POST['document'];
+    $sql = "SELECT * FROM users WHERE document_number = $1";
     $result = pg_query_params($conn, $sql, array($document_number));
 
     if ($result && pg_num_rows($result) > 0) {
@@ -14,10 +14,10 @@ if (isset($_POST['ci'])) {
 
         $user_info = pg_fetch_assoc($result);
         $user_id = $user_info['id'];
-        $first_name = $user_info['nombre'];
-        $last_name = $user_info['apellido'];
-        $document = $user_info['ci'];
-        $role = $user_info['rol'];
+        $first_name = $user_info['first_name'];
+        $last_name = $user_info['last_name'];
+        $document = $user_info['document_number'];
+        $role = $user_info['role'];
 
         $_SESSION['user_id'] = $user_id;
         $_SESSION['first_name'] = $first_name;

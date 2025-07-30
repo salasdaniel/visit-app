@@ -31,10 +31,9 @@ $selected_products = isset($_SESSION['selected_products']) ? $_SESSION['selected
 $observations = $_SESSION['observations'];
 
 // Debug: Show optimized products structure
-echo "<!-- DEBUG: Selected Products Array -->";
-echo "<!-- ";
-print_r($selected_products);
-echo " -->";
+
+// print_r($_SESSION);
+
 
 // Example: Create a detailed products list for WhatsApp message
 $products_list = '';
@@ -54,7 +53,7 @@ $img3 = $_SESSION['img3'];
 $img4 = $_SESSION['img4'];
 
 // Insert visit into PostgreSQL database
-$sql = "INSERT INTO visitas (id_cliente, id_responsable, fecha, hora_ingreso, hora_salida, tiempo_visita, agua, filtro, quimicos, necesita_productos, productos, observaciones, img_1, img_2, img_3, img_4) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)";
+$sql = "INSERT INTO visits (customer_id, advisor_id, visit_date, check_in_time, check_out_time, visit_duration, needs_water, needs_filter, needs_chemicals, needs_products, products, notes, image_1, image_2, image_3, image_4) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)";
 $params = array($client_id, $user_id, $date, $entry_time, $exit_time, $time_difference, $question_1, $question_2, $question_3, $question_4, $products, $observations, $img1, $img2, $img3, $img4);
 $result = pg_query_params($conn, $sql, $params);
 
@@ -73,7 +72,7 @@ Thank you for trusting *PROOPOL S.A*. You have recently been attended by our adv
 We constantly strive to provide the best possible service to our clients. To help us improve even more, we kindly ask for your valuable feedback. Please rate your experience with us on a scale from 1 to 5, where 1 is unsatisfactory and 5 is excellent.";
 
 // Add products list if client requested products
-if ($question_4 === 'si' && !empty($selected_products)) {
+if ($question_4 === 'true' && !empty($selected_products)) {
     $message .= $products_list;
 }
 
@@ -81,7 +80,7 @@ $message .= "
 
 Your feedback is essential to us and will help us improve and continue providing you with excellent service.
 
-*Thank you again for choosing PROOPOL S.A!*";
+*Thank you again for choosing Visit App";
 
 // Convert image path to URL for sending
 $img2 = substr($img2, 6);
@@ -126,7 +125,7 @@ if (isset($api['Error'])) {
         }, 2000);
         </script>";
     print_r($api);
-    var_dump($response);
+    // var_dump($response);
 } elseif (isset($api['sent'])) {
     echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
         <script>
