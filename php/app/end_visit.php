@@ -26,8 +26,24 @@ $question_1 = $_SESSION['question_1'];
 $question_2 = $_SESSION['question_2'];
 $question_3 = $_SESSION['question_3'];
 $question_4 = $_SESSION['question_4'];
-$products = $_SESSION['products'];
+$products = $_SESSION['products']; // Formatted string for database storage
+$selected_products = isset($_SESSION['selected_products']) ? $_SESSION['selected_products'] : array(); // Array format for processing
 $observations = $_SESSION['observations'];
+
+// Debug: Show optimized products structure
+echo "<!-- DEBUG: Selected Products Array -->";
+echo "<!-- ";
+print_r($selected_products);
+echo " -->";
+
+// Example: Create a detailed products list for WhatsApp message
+$products_list = '';
+if (!empty($selected_products)) {
+    $products_list = "\n\n*Products requested by client:*\n";
+    foreach ($selected_products as $product) {
+        $products_list .= "• " . $product[0] . " (Qty: " . $product[1] . ")\n";
+    }
+}
 
 $user_id = $_SESSION['user_id'];
 $client_id = $_SESSION['client_id'];
@@ -49,12 +65,19 @@ $last_name = $_SESSION['last_name'];
 // Client phone
 $phone = '+595' . $_SESSION['client_phone'];
 
-// WhatsApp message in English
+// WhatsApp message 
 $message = "Dear client,
 
 Thank you for trusting *PROOPOL S.A*. You have recently been attended by our advisor, *$first_name $last_name*, on $date.
 
-We constantly strive to provide the best possible service to our clients. To help us improve even more, we kindly ask for your valuable feedback. Please rate your experience with us on a scale from 1 to 5, where 1 is unsatisfactory and 5 is excellent.
+We constantly strive to provide the best possible service to our clients. To help us improve even more, we kindly ask for your valuable feedback. Please rate your experience with us on a scale from 1 to 5, where 1 is unsatisfactory and 5 is excellent.";
+
+// Add products list if client requested products
+if ($question_4 === 'si' && !empty($selected_products)) {
+    $message .= $products_list;
+}
+
+$message .= "
 
 Your feedback is essential to us and will help us improve and continue providing you with excellent service.
 
@@ -102,8 +125,8 @@ if (isset($api['Error'])) {
             window.location.href = '../../php/app/logout.php';
         }, 2000);
         </script>";
-        print_r($api);
-    // var_dump($response);
+    print_r($api);
+    var_dump($response);
 } elseif (isset($api['sent'])) {
     echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
         <script>
@@ -120,10 +143,5 @@ if (isset($api['Error'])) {
         </script>";
 }
 
-// Uncomment for debugging:
-// var_dump($api);
-// print_r($api);
-// header(\"Location:../../php/app/logout.php\");
-// var_dump($_SESSION);
 
 ?>

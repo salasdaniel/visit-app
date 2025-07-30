@@ -66,7 +66,7 @@ if (!$result) {
 							<label for="img1">Before - Pool Photo</label>
 							<div class="custom-file">
 								<input type="file" class="custom-file-input" id="img1" name="img1" accept=".jpg, .jpeg, .png" required>
-								<label class="custom-file-label " for="img1">Choose file...</label>
+								<label class="custom-file-label " for="img1" style = "overflow: hidden;">Choose file...</label>
 							</div>
 							<small class="form-text text-muted">Only jpg, jpeg, png formats allowed. Max 1MB.</small>
 						</div>
@@ -86,24 +86,24 @@ if (!$result) {
 						<label for="question_1">Did you leave water filling?</label>
 						<select class="form-control" name="question_1" required>
 							<option disabled selected value=''>Select an option...</option>
-							<option value="si">Yes</option>
-							<option value="no">No</option>
+							<option value="true">Yes</option>
+							<option value="false">No</option>
 						</select>
 					</div>
 					<div class="form-group col-12 col-md-4">
 						<label for="question_2">Did you leave the pool filtering?</label>
 						<select class="form-control" name="question_2" required>
 							<option disabled selected value=''>Select an option...</option>
-							<option value="si">Yes</option>
-							<option value="no">No</option>
+							<option value="true">Yes</option>
+							<option value="false">No</option>
 						</select>
 					</div>
 					<div class="form-group col-12 col-md-4">
 						<label for="question_3">Did you add chemicals?</label>
 						<select class="form-control" name="question_3" required>
 							<option disabled selected value=''>Select an option...</option>
-							<option value="si">Yes</option>
-							<option value="no">No</option>
+							<option value="true">Yes</option>
+							<option value="false">No</option>
 						</select>
 					</div>
 				</div>
@@ -123,21 +123,21 @@ if (!$result) {
 						<label for="inputGroupFile02">After - Pool</label>
 						<div class="custom-file">
 							<input type="file" class="custom-file-input" id="inputGroupFile02" name="img2" accept=".jpg, .jpeg, .png" required>
-							<label class="custom-file-label " for="inputGroupFile02">Choose file...</label>
+							<label class="custom-file-label " for="inputGroupFile02" style = "overflow: hidden;">Choose file...</label>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="inputGroupFile03">Chemical Level Tester</label>
 						<div class="custom-file">
 							<input type="file" class="custom-file-input" id="inputGroupFile03" name="img3" accept=".jpg, .jpeg, .png" required>
-							<label class="custom-file-label " for="inputGroupFile03">Choose file...</label>
+							<label class="custom-file-label " for="inputGroupFile03" style = "overflow: hidden;">Choose file...</label>
 						</div>
 					</div>
 					<div class="form-group col-md-4">
 						<label for="inputGroupFile04">Machine Room</label>
 						<div class="custom-file">
 							<input type="file" class="custom-file-input" id="inputGroupFile04" name="img4" accept=".jpg, .jpeg, .png" required>
-							<label class="custom-file-label" for="inputGroupFile04">Choose file...</label>
+							<label class="custom-file-label" for="inputGroupFile04" style = "overflow: hidden;">Choose file...</label>
 						</div>
 					</div>
 				</div>
@@ -156,8 +156,8 @@ if (!$result) {
 						<label for="producto">The customer needs products?</label>
 						<select class="form-control" name="question_4" id="products" required>
 							<option selected disabled value=''>Select an option...</option>
-							<option value="si">Yes</option>
-							<option value="no">No</option>
+							<option value="true">Yes</option>
+							<option value="false">No</option>
 						</select>
 					</div>
 				</div>
@@ -166,7 +166,13 @@ if (!$result) {
 				<div class="" style="display:none" id="listcontainer">
 					<input type="hidden" name="quantity" id="quantity" value="0">
 
-					<!-- <h6 class="text-muted mb-3"><i class="fa fa-boxes mr-2"></i>Select Products</h6> -->
+					<div class="mb-3 p-2 bg-light rounded">
+						<small class="text-muted">
+							<i class="fa fa-info-circle mr-1"></i>
+							<span id="selected-count">0 products selected</span> | 
+							<span class="text-success">Only selected products will be sent</span>
+						</small>
+					</div>
 
 					<?php
 					while ($products = pg_fetch_assoc($result)) {
@@ -227,70 +233,9 @@ if (!$result) {
 				</div>
 			</div>
 		</div>
-		<?php require '../../partials/footer.php'; ?>
 	</div>
+	<?php require '../../partials/footer.php'; ?>
 </main>
-
-<style>
-	.product-name {
-		font-weight: 500;
-		color: #495057;
-		font-size: 12px;
-	}
-
-	.product-quantity {
-		border: 1px solid #ced4da !important;
-		font-weight: 500;
-		font-size: 12px;
-		padding: 0px !important
-	}
-
-	.product-quantity:focus {
-		border-color: #80bdff !important;
-		box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, .25) !important;
-	}
-
-	.btn-increase,
-	.btn-decrease {
-		border: 1px solid #ced4da;
-		background-color: #f8f9fa;
-		color: #495057;
-		transition: all 0.2s ease;
-	}
-
-	.btn-increase:hover,
-	.btn-decrease:hover {
-		background-color: #e9ecef;
-		border-color: #adb5bd;
-		color: #343a40;
-	}
-
-	.qty-display {
-		font-size: 0.875rem;
-		font-weight: 500;
-	}
-
-	.table-active {
-		background-color: rgba(0, 123, 255, .075) !important;
-		border-radius: 4px;
-		transition: all 0.3s ease;
-	}
-
-	.border-primary {
-		border-color: #007bff !important;
-	}
-
-	#listcontainer .row {
-		margin: 0;
-		padding: 8px 0;
-		transition: all 0.2s ease;
-	}
-
-	#listcontainer .row:hover {
-		background-color: #f8f9fa;
-		border-radius: 4px;
-	}
-</style>
 
 <script>
 	$(document).ready(function() {
@@ -300,7 +245,7 @@ if (!$result) {
 		// Products selection functionality
 		$("#products").change(function(e) {
 			console.log(this.value)
-			if (this.value == 'si') {
+			if (this.value == 'true') {
 				console.log(this.value)
 				$("#listcontainer").slideDown(500)
 				$("#textarea").slideDown(500)
@@ -366,6 +311,9 @@ if (!$result) {
 				$row.removeClass('table-active border-primary').addClass('border-bottom');
 				$input.removeClass('border-primary').addClass('border-secondary');
 			}
+
+			// Update selected products counter
+			updateSelectedProductsCounter();
 		});
 
 		// Allow manual input in quantity fields
@@ -390,6 +338,59 @@ if (!$result) {
 				$row.removeClass('table-active border-primary').addClass('border-bottom');
 				$input.removeClass('border-primary').addClass('border-secondary');
 			}
+
+			// Update selected products counter
+			updateSelectedProductsCounter();
+		});
+
+		// Function to update selected products counter
+		function updateSelectedProductsCounter() {
+			const selectedCount = $('.product-quantity').filter(function() {
+				return parseInt($(this).val()) > 0;
+			}).length;
+			
+			const text = selectedCount === 1 ? '1 product selected' : `${selectedCount} products selected`;
+			$('#selected-count').text(text);
+			
+			// Update visual indicator
+			if (selectedCount > 0) {
+				$('#selected-count').removeClass('text-muted').addClass('text-primary');
+			} else {
+				$('#selected-count').removeClass('text-primary').addClass('text-muted');
+			}
+		}
+
+		// Optimize form submission - only send products with quantity > 0
+		$('#contactForm').on('submit', function(e) {
+			console.log('Form submission intercepted for optimization');
+			
+			// Get all product quantity inputs
+			const productInputs = $('.product-quantity');
+			let selectedProducts = [];
+			
+			productInputs.each(function() {
+				const quantity = parseInt($(this).val()) || 0;
+				const productId = $(this).data('product');
+				
+				if (quantity > 0) {
+					selectedProducts.push({
+						id: productId,
+						quantity: quantity,
+						name: $(`input[name="producto${productId}"]`).val()
+					});
+				} else {
+					// Remove inputs for products with 0 quantity to optimize payload
+					$(`input[name="producto${productId}"]`).remove();
+					$(`input[name="cantidad${productId}"]`).remove();
+				}
+			});
+			
+			// Log optimization results
+			console.log('Selected products for submission:', selectedProducts);
+			console.log(`Optimized: Sending ${selectedProducts.length} products instead of ${productInputs.length}`);
+			
+			// Continue with normal form submission
+			return true;
 		});
 	});
 </script>

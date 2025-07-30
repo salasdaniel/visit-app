@@ -8,7 +8,7 @@ require '../../config/user_validation.php';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="img/favicon.png" rel="shortcut icon">
-  <title>Cerrar Sesion | PROPOOL </title>
+  <title>Exit Scanner | VisitApp</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="../../../js/qrCode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -16,22 +16,31 @@ require '../../config/user_validation.php';
 
 
 <body>
-  <div class="justify-content-center" style="height: 100vh; display:flex; align-items: center ; background-color: #f8f8f8;">
-    <div class="col-sm-4 p-3">
-      <h5 class="text-center">Escanear codigo QR <br> Para marcar salida</h5>
-      <div class="row text-center">
-        <a id="btn-scan-qr" href="#">
-          <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg" class="img-fluid text-center" width="175">
-        <a/>
-        <canvas hidden="" id="qr-canvas" class="img-fluid"></canvas>
+  <div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="row w-100 justify-content-center">
+      <div class="col-md-5 col-lg-4">
+        <div class="card shadow-lg p-4" style="border-radius: 20px; background: rgba(255,255,255,0.95);">
+          <div class="card-body">
+      <h3 class="card-title text-center mb-4 font-weight-bold">
+        <i class="fas fa-sign-out-alt mr-2"></i>Exit Scanner
+      </h3>
+            <div class="text-center mb-3">
+              <a id="btn-scan-qr" href="#">
+                <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg" alt="QR Icon" style="width: 70%;">
+              </a>
+              <canvas hidden id="qr-canvas" class="img-fluid" style="border-radius: 15px"></canvas>
+            </div>
+            <div class="d-flex justify-content-center gap-2 mb-2">
+              <button class="btn btn-primary mr-2" style="border-radius: 25px; padding: 12px 24px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;" onclick="turnOn()">
+                <i class="fas fa-camera"></i> Start</button>
+              <button class="btn btn-secondary" style="border-radius: 25px; padding: 12px 24px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;" onclick="turnOff()">
+                <i class="fas fa-stop-circle"></i> Stop</button>
+            </div>
+            <div class="text-center mt-3">
+              <small class="text-muted">Scan the QR code to mark your exit.</small>
+            </div>
+          </div>
         </div>
-        <div class="row mx-5 my-3">
-        <button class="btn btn-success btn-sm rounded-3 mb-2" onclick="encenderCamara()">Encender camara</button>
-        <button class="btn btn-danger btn-sm rounded-3" onclick="cerrarCamara()">Detener camara</button>
-        <!-- <form action="guardar_respuesta.php" method="post">
-            <input type="text" id='respuesta' name="respuesta" value = 'hola'>
-            <button type="submit" id='enviar_respuesta'>enviar</button>
-        </form> -->
       </div>
     </div>
   </div>
@@ -40,36 +49,60 @@ require '../../config/user_validation.php';
 </html>
 
 <script>
-//crea elemento
+// Create video element
 const video = document.createElement("video");
 
-//nuestro camvas
+// Our canvas
 const canvasElement = document.getElementById("qr-canvas");
 const canvas = canvasElement.getContext("2d");
 
-//div donde llegara nuestro canvas
+// Div where our canvas will be displayed
 const btnScanQR = document.getElementById("btn-scan-qr");
 
-//lectura desactivada
+// Scanning state
 let scanning = false;
 
-//funcion para encender la camara
-const encenderCamara = () => {
-  navigator.mediaDevices
-    .getUserMedia({ video: { facingMode: "environment" } })
-    .then(function (stream) {
-      scanning = true;
-      btnScanQR.hidden = true;
-      canvasElement.hidden = false;
-      video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-      video.srcObject = stream;
-      video.play();
-      tick();
-      scan();
+// Function to start the camera (requests access every click)
+const turnOn = () => {
+  // If already scanning, stop previous stream before requesting again
+  if (video.srcObject) {
+    video.srcObject.getTracks().forEach((track) => track.stop());
+    video.srcObject = null;
+  }
+  if (navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function') {
+    navigator.mediaDevices
+      .getUserMedia({ video: { facingMode: "environment" } })
+      .then(function (stream) {
+        scanning = true;
+        btnScanQR.hidden = true;
+        canvasElement.hidden = false;
+        video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+        video.srcObject = stream;
+        video.play();
+        tick();
+        scan();
+      })
+      .catch(function (err) {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: 'Camera access denied',
+          text: 'Please allow camera access to scan QR codes.',
+          showConfirmButton: true
+        });
+      });
+  } else {
+    Swal.fire({
+      position: 'center',
+      icon: 'error',
+      title: 'Camera not supported',
+      text: 'Your browser does not support camera access required for QR scanning.',
+      showConfirmButton: true
     });
+  }
 };
 
-//funciones para levantar las funiones de encendido de la camara
+// Functions to handle camera activation
 function tick() {
   canvasElement.height = video.videoHeight;
   canvasElement.width = video.videoWidth;
@@ -86,8 +119,8 @@ function scan() {
   }
 }
 
-//apagara la camara
-const cerrarCamara = () => {
+// Function to stop the camera
+const turnOff = () => {
   video.srcObject.getTracks().forEach((track) => {
     track.stop();
   });
@@ -95,52 +128,46 @@ const cerrarCamara = () => {
   btnScanQR.hidden = false;
 };
 
-const activarSonido = () => {
+const playSound = () => {
   var audio = document.getElementById('audioScaner');
   audio.play();
 }
 
+const qr = 'https://qrco.de/propool';
 
-qr = 'https://qrco.de/propool';
-
-qrcode.callback = (respuesta) => {
-  if (respuesta) {
-    
-    if (respuesta === qr){
-       
+qrcode.callback = (response) => {
+  if (response) {
+    if (response === qr) {
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'Salida marcada con exito',
+        title: 'Exit marked successfully',
         showConfirmButton: false,
         timer: 1500
-      })
-      setTimeout(function(){
-        window.location.href = '../../app/envio.php'
-      },1500)
-      
-    }else {
-
+      });
+      setTimeout(function () {
+        window.location.href = '../../app/end_visit.php';
+      }, 1500);
+    } else {
       Swal.fire({
         position: 'center',
         icon: 'warning',
-        title: 'codigo QR incorrecto',
+        title: 'Incorrect QR code',
+        text: 'Please try again with a valid QR code.',
         showConfirmButton: false,
         timer: 1500
-      })
-      cerrarCamara();
+      });
+      turnOff();
       return;
-
     }
-    
-    
-
-    cerrarCamara();
+    turnOff();
   }
 };
-//evento para mostrar la camara sin el boton 
 
-
+// Event to show the camera automatically
+// window.addEventListener('load', (e) => {
+//   turnOn();
+// })
 
 </script>
 
