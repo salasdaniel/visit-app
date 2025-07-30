@@ -3,7 +3,7 @@
 require '../../config/admin_validation.php';
 require '../../partials/head.php';
 require '../../partials/subheader.php';
-require '../../config/conexion.php'; // Cambia a tu archivo de conexión PostgreSQL
+require '../../config/connection.php'; // Cambia a tu archivo de conexión PostgreSQL
 require '../../partials/swal.php';
 
 ?>

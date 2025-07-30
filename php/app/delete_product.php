@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../config/conexion.php';
+require '../config/connection.php';
 // Check if user is logged in
 
 $id = $_GET['id'];

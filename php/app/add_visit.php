@@ -1,7 +1,7 @@
 <?php
 require '../config/user_validation.php';
 require_once ('../../vendor/autoload.php');
-require '../config/conexion.php';
+require '../config/connection.php';
 
 
 

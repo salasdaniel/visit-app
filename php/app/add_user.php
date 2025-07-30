@@ -1,7 +1,7 @@
 <?php
 
     session_start();
-    require '../config/conexion.php';
+    require '../config/connection.php';
 
     $first_name = trim(strtoupper($_POST['nombre']));
     $last_name = trim(strtoupper($_POST['apellido']));

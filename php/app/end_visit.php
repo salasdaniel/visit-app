@@ -2,7 +2,7 @@
 
 
 require '../config/user_validation.php';
-require '../config/conexion.php';
+require '../config/connection.php';
 require '../partials/head.php';
 require_once ('../../vendor/autoload.php');
 

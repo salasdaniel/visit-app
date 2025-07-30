@@ -3,7 +3,7 @@
 	require '../../config/user_validation.php';
 	require '../../partials/head.php';
 	require '../../partials/subheader.php';
-	require '../../config/conexion.php';
+	require '../../config/connection.php';
 	require '../../partials/swal.php';
 
 	date_default_timezone_set('America/Argentina/Buenos_Aires');

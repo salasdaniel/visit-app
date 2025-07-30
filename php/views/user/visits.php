@@ -3,7 +3,7 @@
 require '../../config/user_validation.php';
 require '../../partials/head.php';
 require '../../partials/subheader.php';
-require '../../config/conexion.php';
+require '../../config/connection.php';
 
 
 if (isset($_SESSION['upload_error'])) {

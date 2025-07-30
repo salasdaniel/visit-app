@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../config/conexion.php';
+require '../config/connection.php';
 
 $id = $_GET['id'];
 $sql = "UPDATE clientes SET activo = false WHERE id = $1";

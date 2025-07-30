@@ -1,7 +1,7 @@
 <?php
 require '../config/admin_validation.php';
 require '../../vendor/autoload.php';
-require '../config/conexion.php';
+require '../config/connection.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 

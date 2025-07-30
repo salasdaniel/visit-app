@@ -2,7 +2,7 @@
 require '../../config/admin_validation.php';
 require '../../partials/head.php';
 require '../../partials/subheader.php';
-require '../../config/conexion.php';
+require '../../config/connection.php';
 
 $perPage = 10;
 $page = !empty($_REQUEST['num']) ? (int)$_REQUEST['num'] : 1;

@@ -1,6 +1,6 @@
 <?php
 
-require '../config/conexion.php';
+require '../config/connection.php';
 // Tu código para conectarte a la base de datos y configurar la paginación aquí
 
 // Consulta SQL para obtener todos los registros (sin limitación de página)

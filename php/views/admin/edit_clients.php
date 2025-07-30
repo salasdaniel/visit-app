@@ -2,7 +2,7 @@
 require '../../config/admin_validation.php';
 require '../../partials/head.php';
 require '../../partials/subheader.php';
-require '../../config/conexion.php';
+require '../../config/connection.php';
 
 $id = $_GET['id'];
 $sql = "SELECT * FROM clientes WHERE id = $1";

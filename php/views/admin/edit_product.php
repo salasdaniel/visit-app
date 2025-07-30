@@ -3,7 +3,7 @@ require '../../config/admin_validation.php';
 require '../../partials/head.php';
 require '../../partials/subheader.php';
 require '../../partials/swal.php';
-require '../../config/conexion.php';
+require '../../config/connection.php';
 
 
 

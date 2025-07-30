@@ -1,6 +1,6 @@
 <?php
 require '../config/user_validation.php';
-require '../config/conexion.php';
+require '../config/connection.php';
 
 try {
     // Basic validation - check if client ID is provided

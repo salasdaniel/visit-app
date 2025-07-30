@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../config/middleware.php';
-require '../config/conexion.php';
+require '../config/connection.php';
 
 if (isset($_POST['submit'])) {
     // Get form data
