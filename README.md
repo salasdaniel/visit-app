@@ -118,7 +118,7 @@ visit-app/
 - **PHP 7.4+** with extensions: pdo, pdo_pgsql, gd, curl
 - **PostgreSQL 13+**
 - **Composer**
-- **Web server** (Apache/Nginx)
+- **Web server** (Apache/Laragon): you must redirect to https:// to test correctly QR scan throw qrCode.min.js
 
 ### Installation Steps
 
