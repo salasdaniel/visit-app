@@ -1,6 +1,7 @@
 {
     "require": {
         "ultramsg/whatsapp-php-sdk": "^2.0",
-        "phpoffice/phpspreadsheet": "^1.29"
+        "phpoffice/phpspreadsheet": "^1.29",
+        "vlucas/phpdotenv": "^5.6"
     }
 }

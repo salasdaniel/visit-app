@@ -1,54 +1,47 @@
 <?php
 
-require '../config/conexion.php';
+require '../config/connection.php';
 
-if (isset($_POST['ci'])) {
+if (isset($_POST['document'])) {
 
+    $document_number = $_POST['document'];
+    $sql = "SELECT * FROM users WHERE document_number = $1";
+    $result = pg_query_params($conn, $sql, array($document_number));
 
-    $ci_ingreso = $_POST['ci'];
-    $sql = "SELECT * FROM personas WHERE ci = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $ci_ingreso);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
+    if ($result && pg_num_rows($result) > 0) {
 
         session_start();
 
-        $info_usuario = $result->fetch_assoc();
-        $id = $info_usuario['id'];
-        $nombre = $info_usuario['nombre'];
-        $apellido = $info_usuario['apellido'];
-        $ci = $info_usuario['ci'];
-        $rol = $info_usuario['rol'];
+        $user_info = pg_fetch_assoc($result);
+        $user_id = $user_info['id'];
+        $first_name = $user_info['first_name'];
+        $last_name = $user_info['last_name'];
+        $document = $user_info['document_number'];
+        $role = $user_info['role'];
 
-        $_SESSION['id'] = $id;
-        $_SESSION['nombre'] = $nombre;
-        $_SESSION['apellido'] = $apellido;
-        $_SESSION['ci'] = $ci;
-        $_SESSION['rol'] = $rol;
+        $_SESSION['user_id'] = $user_id;
+        $_SESSION['first_name'] = $first_name;
+        $_SESSION['last_name'] = $last_name;
+        $_SESSION['document'] = $document;
+        $_SESSION['role'] = $role;
 
+        pg_free_result($result);
+        pg_close($conn);
 
-        if ($rol == 1) {
-
-            $stmt->close();
-            $conn->close();
-            header('location:../views/admin/admin.php');
-            
-        } elseif ($rol == 2) {
-
-            $stmt->close();
-            $conn->close();
-            echo '<script>window.location.href = "../views/user/qr.php";</script>';
+        if ($role == 1) {
+            // header('location:../views/admin/admin.php');
+            header('location: ../views/admin/admin.php');
+            exit;
+        } else {
+            // print_r($_SESSION);
+            header('location: ../views/user/entry.php');
+            exit;
         }
 
-        $stmt->close();
-        $conn->close();
     } else {
-
         session_start();
         $_SESSION['error'] = 0;
+        pg_close($conn);
         header('location: ../../index.php');
     }
 }

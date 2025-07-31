@@ -1,8 +1,8 @@
 <?php
-if (isset($_SESSION['msj'])) {
-	$respuesta = $_SESSION['msj'];
+if (isset($_SESSION['msg'])) {
+	$respuesta = $_SESSION['msg'];
 
-	switch ($_SESSION['msj_code']) {
+	switch ($_SESSION['msg_code']) {
 		case 0:
 			echo "<script>
 								Swal.fire({
@@ -20,7 +20,7 @@ if (isset($_SESSION['msj'])) {
 			echo "<script>
 								Swal.fire({
 								icon: 'success',
-								title: '¡Éxito!',
+								title: '¡Success!',
 								text: '$respuesta',
 								showConfirmButton: false,
 								timer: 1500
@@ -51,7 +51,7 @@ if (isset($_SESSION['deleted'])) {
 				Swal.fire({
 					position: 'center',
 					icon: 'success',
-					title: 'Registro eliminado con éxito',
+					title: 'Record deleted successfully',
 					showConfirmButton: false,
 					timer: 1500
 				})
@@ -59,7 +59,7 @@ if (isset($_SESSION['deleted'])) {
 }
 
 unset($_SESSION['deleted']);
-unset($_SESSION['msj']);
-unset($_SESSION['msj_code']);
+unset($_SESSION['msg']);
+unset($_SESSION['msg_code']);
 
 ?>
