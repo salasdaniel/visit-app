@@ -13,7 +13,7 @@ services:
       - db
 
   db:
-    image: postgres:16
+    image: postgres:14
     container_name: visitapp_pg_prod
     restart: always
     env_file: .env.prod
