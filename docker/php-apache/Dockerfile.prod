@@ -28,8 +28,7 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends $buildDeps; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install -j"$(nproc)" pdo pdo_pgsql pgsql gd zip; \
-    a2enmod headers rewrite mime; \
-    apt-get purge -y --auto-remove $buildDeps; \
+    a2enmod headers rewrite mime; \ 
     rm -rf /var/lib/apt/lists/*
 
 COPY docker/php-apache/vhost.conf /etc/apache2/sites-available/000-default.conf
