@@ -6,7 +6,7 @@ if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'localhost:8080') 
     define('BASE_URL', '/');
 } else {
     // Local development environment
-    define('BASE_URL', '/mis-repositorios/visit-app/');
+    define('BASE_URL', '/');
 }
 
 
