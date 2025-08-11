@@ -1,47 +1,38 @@
-# ---- Stage 1: Composer ----
-FROM composer:2 AS vendor
+# ---- Stage 1: PHP CLI con gd + Composer ----
+FROM php:8.3-cli AS vendor
+ENV COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_NO_INTERACTION=1
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip; \
+    docker-php-ext-configure gd --with-freetype --with-jpeg; \
+    docker-php-ext-install -j"$(nproc)" gd zip; \
+    rm -rf /var/lib/apt/lists/*
+
+# instalar binario de composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-interaction --no-ansi --no-progress
-# (opcional, si querés optimizar el autoload con tu código presente)
+RUN composer install --no-dev --prefer-dist --no-ansi --no-progress
+
 COPY . .
 RUN composer dump-autoload --no-dev --optimize --classmap-authoritative
 
-# docker/php-apache/Dockerfile.prod
+# ---- Stage 2: PHP + Apache (runtime) ----
 FROM php:8.3-apache
-
-# Avoid tz/interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Build & runtime in one shot, then purge build deps
 RUN set -eux; \
     apt-get update; \
-    buildDeps=" \
-      $PHPIZE_DEPS \
-      libpq-dev \
-      libpng-dev \
-      libjpeg-dev \
-      libfreetype6-dev \
-      libzip-dev \
-      unzip \
-    "; \
+    buildDeps="$PHPIZE_DEPS libpq-dev libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"; \
     apt-get install -y --no-install-recommends $buildDeps; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install -j"$(nproc)" pdo pdo_pgsql pgsql gd zip; \
-    # habilitar módulos que sí necesitas
     a2enmod headers rewrite mime; \
-    # limpiar y purgar build deps para achicar la imagen
     apt-get purge -y --auto-remove $buildDeps; \
     rm -rf /var/lib/apt/lists/*
 
-# VirtualHost (sin .htaccess; fallback a index.php)
 COPY docker/php-apache/vhost.conf /etc/apache2/sites-available/000-default.conf
-
 WORKDIR /var/www/html
-
-# Copia tu app y evita una capa extra de chown
 COPY --chown=www-data:www-data . /var/www/html
 COPY --from=vendor --chown=www-data:www-data /app/vendor /var/www/html/vendor
-
-# Permisos mínimos (si tu COPY ya trae los correctos, puedes omitir)
-RUN chmod -R 755 /var/www/html
