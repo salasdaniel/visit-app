@@ -1,7 +1,6 @@
 <?php
-
-require './php/partials/head.php';
 session_start();
+require './php/partials/head.php';
 
 if (isset($_SESSION['error'])) {
 

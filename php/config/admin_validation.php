@@ -12,5 +12,3 @@ if ($_SESSION['role'] != 1 ) {
     exit;
 }
 
-?>
-
