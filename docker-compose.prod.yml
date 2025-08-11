@@ -16,7 +16,7 @@ services:
     image: postgres:14
     container_name: visitapp_pg_prod
     restart: always
-    env_file: .env.prod
+    env_file: .env
     volumes:
       - db_data:/var/lib/postgresql/data
       # First run only (empty volume). Uncomment to seed:
