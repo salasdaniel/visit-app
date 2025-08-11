@@ -1,3 +1,12 @@
+# ---- Stage 1: Composer ----
+FROM composer:2 AS vendor
+WORKDIR /app
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --prefer-dist --no-interaction --no-ansi --no-progress
+# (opcional, si querés optimizar el autoload con tu código presente)
+COPY . .
+RUN composer dump-autoload --no-dev --optimize --classmap-authoritative
+
 # docker/php-apache/Dockerfile.prod
 FROM php:8.3-apache
 
@@ -32,6 +41,7 @@ WORKDIR /var/www/html
 
 # Copia tu app y evita una capa extra de chown
 COPY --chown=www-data:www-data . /var/www/html
+COPY --from=vendor --chown=www-data:www-data /app/vendor /var/www/html/vendor
 
 # Permisos mínimos (si tu COPY ya trae los correctos, puedes omitir)
 RUN chmod -R 755 /var/www/html
