@@ -2,38 +2,53 @@
 FROM php:8.3-cli AS vendor
 ENV COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_NO_INTERACTION=1
+
 RUN set -eux; \
     apt-get update; \
-    apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip; \
+    apt-get install -y --no-install-recommends \
+        libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install -j"$(nproc)" gd zip; \
     rm -rf /var/lib/apt/lists/*
 
-# instalar binario de composer
+# Instalar binario de composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
+
+# Copiar composer.json y lock para instalar dependencias
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --prefer-dist --no-ansi --no-progress
 
+# Copiar el resto del código incluyendo .env
 COPY . .
 RUN composer dump-autoload --no-dev --optimize --classmap-authoritative
 
 # ---- Stage 2: PHP + Apache (runtime) ----
 FROM php:8.3-apache
 ENV DEBIAN_FRONTEND=noninteractive
+
 RUN set -eux; \
     apt-get update; \
-    buildDeps="$PHPIZE_DEPS libpq-dev libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"; \
-    apt-get install -y --no-install-recommends $buildDeps; \
+    # Runtime + build deps (pgsql necesita libpq-dev para compilar, libpq5 para runtime)
+    apt-get install -y --no-install-recommends \
+        libpq5 libpng16-16 libjpeg62-turbo libfreetype6 libzip4 unzip \
+        $PHPIZE_DEPS libpq-dev libpng-dev libjpeg-dev libfreetype6-dev libzip-dev; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install -j"$(nproc)" pdo pdo_pgsql pgsql gd zip; \
-    a2enmod headers rewrite mime; \ 
+    docker-php-ext-enable pdo_pgsql pgsql; \
+    a2enmod headers rewrite mime; \
+    # Quitar build deps
+    apt-get purge -y --auto-remove $PHPIZE_DEPS libpq-dev libpng-dev libjpeg-dev libfreetype6-dev libzip-dev; \
     rm -rf /var/lib/apt/lists/*
 
+# Copiar configuración de Apache
 COPY docker/php-apache/vhost.conf /etc/apache2/sites-available/000-default.conf
+
 WORKDIR /var/www/html
+
+# Copiar código de la app (incluyendo .env)
 COPY --chown=www-data:www-data . /var/www/html
+
+# Sobrescribir vendor con el generado en el stage anterior
 COPY --from=vendor --chown=www-data:www-data /app/vendor /var/www/html/vendor
-
-
