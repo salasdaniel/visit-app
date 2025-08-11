@@ -1,6 +1,6 @@
 <?php
-require '../config/admin_validation.php';
-require '../config/connection.php';
+require dirname(__DIR__) . '/config/admin_validation.php';
+require dirname(__DIR__) . '/config/connection.php';
 // Check if user is logged in
 
 $id = $_GET['id'];

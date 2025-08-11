@@ -1,9 +1,9 @@
 <?php
-require '../../config/admin_validation.php';
-require '../../partials/head.php';
-require '../../partials/subheader.php';
-require '../../partials/swal.php';
-require '../../config/connection.php';
+require dirname(__DIR__, 2) . '/config/admin_validation.php';
+require dirname(__DIR__, 2) . '/partials/head.php';
+require dirname(__DIR__, 2) . '/partials/subheader.php';
+require dirname(__DIR__, 2) . '/partials/swal.php';
+require dirname(__DIR__, 2) . '/config/connection.php';
 
 if (isset($_SESSION['msg']) && isset($_SESSION['msg_code'])) {
     echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
@@ -107,7 +107,11 @@ if ($result) {
                         <button type="submit" name="submit" class="btn btn-primary mr-2">
                             Process <i class="fa fa-paper-plane ml-2"></i>
                         </button>
-                        <a href='../../../docs/product_template.xlsx' class="btn btn-secondary">
+                        <?php
+                        // Dynamic path for template download
+                        $template_path = ($_SERVER['HTTP_HOST'] === 'localhost:8080') ? '/docs/product_template.xlsx' : BASE_URL . 'docs/product_template.xlsx';
+                        ?>
+                        <a href='<?php echo $template_path; ?>' class="btn btn-secondary">
                             Download Template
                         </a>
                     </div>
@@ -174,7 +178,7 @@ if ($result) {
             </div>
         <?php endif; ?>
     </div>
-    <?php require '../../partials/footer.php'; ?>
+    <?php require dirname(__DIR__, 2) . '/partials/footer.php'; ?>
 </main>
 
 <script>

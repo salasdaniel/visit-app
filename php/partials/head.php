@@ -9,34 +9,29 @@
     <meta name="author" content="UWS">
     <title>Visit - APP </title>
 
+    <?php
+    // Include configuration if not already included
+    if (!defined('BASE_URL')) {
+        require_once(dirname(__DIR__) . '/config/connection.php');
+    }
+    
+    // For Docker environment, use root path
+    $base_path = $_SERVER['HTTP_HOST'] === 'localhost:8080' ? '/' : BASE_URL;
+    ?>
 
     <!-- Google Fonts - Poppins -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 
-    <!-- References for linux  un comment this for linux enviroments-->
-    <!-- <link href="../../../img/favicon.png" rel="shortcut icon">
-    <link href="../../../vendor/fontawesome/css/all.min.css" rel="stylesheet">
-    <link href="../../../vendor/icomoon/css/iconfont.min.css" rel="stylesheet">
-    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../../vendor/dmenu/css/menu.css" rel="stylesheet">
-    <link href="../../../vendor/hamburgers/css/hamburgers.min.css" rel="stylesheet">
-    <link href="../../../vendor/mmenu/css/mmenu.min.css" rel="stylesheet">
-    <link href="../../../vendor/filepond/css/filepond.css" rel="stylesheet">
-    <link href="../../../css/style.css" rel="stylesheet"> -->
-    <!-- End references for linux  -->
-
-    <!-- References for windows -->
-    <link href="/visit-app/img/favicon.png" rel="shortcut icon">
-    <link href="/visit-app/vendor/fontawesome/css/all.min.css" rel="stylesheet">
-    <link href="/visit-app/vendor/icomoon/css/iconfont.min.css" rel="stylesheet">
-    <link href="/visit-app/css/style.css" rel="stylesheet">
-    <link href="/visit-app/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/visit-app/vendor/dmenu/css/menu.css" rel="stylesheet">
-    <link href="/visit-app/vendor/hamburgers/css/hamburgers.min.css" rel="stylesheet">
-    <link href="/visit-app/vendor/mmenu/css/mmenu.min.css" rel="stylesheet">
-    <link href="/visit-app/vendor/filepond/css/filepond.css" rel="stylesheet">
-
-    <!-- End references for windows  -->
+    <!-- References with absolute paths -->
+    <link href="<?php echo $base_path; ?>img/favicon.png" rel="shortcut icon">
+    <link href="<?php echo $base_path; ?>vendor/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="<?php echo $base_path; ?>vendor/icomoon/css/iconfont.min.css" rel="stylesheet">
+    <link href="<?php echo $base_path; ?>vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<?php echo $base_path; ?>vendor/dmenu/css/menu.css" rel="stylesheet">
+    <link href="<?php echo $base_path; ?>vendor/hamburgers/css/hamburgers.min.css" rel="stylesheet">
+    <link href="<?php echo $base_path; ?>vendor/mmenu/css/mmenu.min.css" rel="stylesheet">
+    <link href="<?php echo $base_path; ?>vendor/filepond/css/filepond.css" rel="stylesheet">
+    <link href="<?php echo $base_path; ?>css/style.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- <script src="../../../vendor/jquery/jquery.min.js"></script> -->

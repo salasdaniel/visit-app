@@ -1,7 +1,7 @@
 <?php
-require '../config/user_validation.php';
-require_once ('../../vendor/autoload.php');
-require '../config/connection.php';
+require dirname(__DIR__) . '/config/user_validation.php';
+require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/config/connection.php';
 
 
 

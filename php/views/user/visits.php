@@ -1,9 +1,9 @@
 <?php
 
-require '../../config/user_validation.php';
-require '../../partials/head.php';
-require '../../partials/subheader.php';
-require '../../config/connection.php';
+require dirname(__DIR__, 2) . '/config/user_validation.php';
+require dirname(__DIR__, 2) . '/partials/head.php';
+require dirname(__DIR__, 2) . '/partials/subheader.php';
+require dirname(__DIR__, 2) . '/config/connection.php';
 
 
 if (isset($_SESSION['upload_error'])) {
@@ -234,7 +234,7 @@ if (!$result) {
 			</div>
 		</div>
 	</div>
-	<?php require '../../partials/footer.php'; ?>
+	<?php require dirname(__DIR__, 2) . '/partials/footer.php'; ?>
 </main>
 
 <script>

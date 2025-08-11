@@ -1,8 +1,8 @@
 <?php
-require '../../config/admin_validation.php';
-require '../../partials/head.php';
-require '../../partials/subheader.php';
-require '../../config/connection.php';
+require dirname(__DIR__, 2) . '/config/admin_validation.php';
+require dirname(__DIR__, 2) . '/partials/head.php';
+require dirname(__DIR__, 2) . '/partials/subheader.php';
+require dirname(__DIR__, 2) . '/config/connection.php';
 
 $perPage = 10;
 $page = !empty($_REQUEST['num']) ? (int)$_REQUEST['num'] : 1;
@@ -123,7 +123,7 @@ if ($result) {
 			</div>
 		</div>
 	</div>
-	<?php require '../../partials/footer.php'; ?>
+	<?php require dirname(__DIR__, 2) . '/partials/footer.php'; ?>
 </main>
 
 <script>

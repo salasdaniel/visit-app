@@ -1,8 +1,8 @@
 <?php
-require '../../config/admin_validation.php';
-require '../../partials/head.php';
-require '../../partials/subheader.php';
-require '../../config/connection.php';
+require dirname(__DIR__, 2) . '/config/admin_validation.php';
+require dirname(__DIR__, 2) . '/partials/head.php';
+require dirname(__DIR__, 2) . '/partials/subheader.php';
+require dirname(__DIR__, 2) . '/config/connection.php';
 $id = $_GET['id'];
 $sql = "SELECT * FROM customers WHERE id = $1";
 $result = pg_query_params($conn, $sql, array($id));
@@ -89,4 +89,4 @@ pg_close($conn);
 		</div>
 	</div>
 </main>
-<?php require '../../partials/footer.php'; ?>
+<?php require dirname(__DIR__, 2) . '/partials/footer.php'; ?>

@@ -1,6 +1,6 @@
 <?php
-require '../config/admin_validation.php';
-require '../config/connection.php';
+require dirname(__DIR__) . '/config/admin_validation.php';
+require dirname(__DIR__) . '/config/connection.php';
 
 $id = $_GET['id'];
 $sql = "UPDATE customers SET is_active = false WHERE id = $1";

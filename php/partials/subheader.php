@@ -1,3 +1,13 @@
+<?php
+// Include configuration if not already included
+if (!defined('BASE_URL')) {
+    require_once(dirname(__DIR__) . '/config/connection.php');
+}
+
+// Dynamic path system for navigation
+$base_nav_path = ($_SERVER['HTTP_HOST'] === 'localhost:8080') ? '/' : BASE_URL;
+?>
+
 <!-- Sub Header -->
 <style>
 /* Offcanvas Sidebar Styles - Using Bootstrap classes */
@@ -117,23 +127,23 @@ if ($_SESSION['role'] == 1) {
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/admin.php">Home</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/admin.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/users.php">Users</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/users.php">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/clients.php">Clients</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/clients.php">Clients</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/visits.php">Visits</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/visits.php">Visits</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/products.php">Products</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/products.php">Products</a>
                 </li>
             </ul>
 
-            <a href="../../app/logout.php"><button type="button" class="btn btn-light">Logout</button></a>
+            <a href="<?php echo $base_nav_path; ?>php/app/logout.php"><button type="button" class="btn btn-light">Logout</button></a>
         </div>
     </nav>
 
@@ -149,24 +159,24 @@ if ($_SESSION['role'] == 1) {
         <div class="offcanvas-body">
             <ul class="navbar-nav sidebar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/admin.php">Home</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/admin.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/users.php">Users</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/users.php">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/clients.php">Clients</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/clients.php">Clients</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/visits.php">Visits</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/visits.php">Visits</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../admin/products.php">Products</a>
+                    <a class="nav-link" href="<?php echo $base_nav_path; ?>php/views/admin/products.php">Products</a>
                 </li>
             </ul>
             
             <div class="mt-auto pt-3">
-                <a href="../../app/logout.php" class="btn btn-light w-100">Logout</a>
+                <a href="<?php echo $base_nav_path; ?>php/app/logout.php" class="btn btn-light w-100">Logout</a>
             </div>
         </div>
     </div>

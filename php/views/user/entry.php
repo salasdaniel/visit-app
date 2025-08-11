@@ -1,5 +1,5 @@
 <?php
-require '../../config/user_validation.php';
+require dirname(__DIR__, 2) . '/config/user_validation.php';
 ?>
 
 <!DOCTYPE html>

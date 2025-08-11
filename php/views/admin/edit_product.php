@@ -1,9 +1,9 @@
 <?php
-require '../../config/admin_validation.php';
-require '../../partials/head.php';
-require '../../partials/subheader.php';
-require '../../partials/swal.php';
-require '../../config/connection.php';
+require dirname(__DIR__, 2) . '/config/admin_validation.php';
+require dirname(__DIR__, 2) . '/partials/head.php';
+require dirname(__DIR__, 2) . '/partials/subheader.php';
+require dirname(__DIR__, 2) . '/partials/swal.php';
+require dirname(__DIR__, 2) . '/config/connection.php';
 
 
 

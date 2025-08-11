@@ -1,10 +1,10 @@
 <?php
 
-	require '../../config/user_validation.php';
-	require '../../partials/head.php';
-	require '../../partials/subheader.php';
-	require '../../config/connection.php';
-	require '../../partials/swal.php';
+	require dirname(__DIR__, 2) . '/config/user_validation.php';
+	require dirname(__DIR__, 2) . '/partials/head.php';
+	require dirname(__DIR__, 2) . '/partials/subheader.php';
+	require dirname(__DIR__, 2) . '/config/connection.php';
+	require dirname(__DIR__, 2) . '/partials/swal.php';
 
 	date_default_timezone_set('America/Argentina/Buenos_Aires');
 	$_SESSION['entry_time'] = date("H:i:s");
@@ -66,7 +66,7 @@
 			<!-- Add Client Section -->
 			
 		</div>
-		<?php require '../../partials/footer.php'; ?>
+		<?php require dirname(__DIR__, 2) . '/partials/footer.php'; ?>
 	</main>
 	<!-- Main End -->
 

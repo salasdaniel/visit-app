@@ -1,6 +1,13 @@
 <?php
 
-define('BASE_URL', '/mis-repositorios/visit-app/');
+// Define BASE_URL based on environment
+if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'localhost:8080') {
+    // Docker environment
+    define('BASE_URL', '/');
+} else {
+    // Local development environment
+    define('BASE_URL', '/mis-repositorios/visit-app/');
+}
 
 
 require_once(dirname(__DIR__, 2) . '/vendor/autoload.php');

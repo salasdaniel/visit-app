@@ -1,7 +1,7 @@
 <?php
 
-require '../config/admin_validation.php';
-require '../config/connection.php';
+require dirname(__DIR__) . '/config/admin_validation.php';
+require dirname(__DIR__) . '/config/connection.php';
 
 $first_name = trim(strtoupper($_POST['first_name']));
 $last_name = trim(strtoupper($_POST['last_name']));

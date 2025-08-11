@@ -1,9 +1,9 @@
 <?php
 
 // Check if user is logged in
-require '../config/admin_validation.php';
-require '../../vendor/autoload.php';
-require '../config/connection.php';
+require dirname(__DIR__) . '/config/admin_validation.php';
+require dirname(__DIR__, 2) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/config/connection.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 

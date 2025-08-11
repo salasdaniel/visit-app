@@ -1,0 +1,24 @@
+services:
+  app:
+    image: TUUSUARIO/visitapp-php-apache:1.0.0
+    container_name: visitapp_php_apache_prod
+    restart: always
+    env_file: .env.prod
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    # no montamos código en prod; viene dentro de la imagen
+
+  db:
+    image: postgres:16
+    container_name: visitapp_pg_prod
+    restart: always
+    env_file: .env.prod
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # SOLO si es la primera vez y querés poblar con backup.sql:
+      # - ./db/backup.sql:/docker-entrypoint-initdb.d/001_backup.sql:ro
+
+volumes:
+  db_data:

@@ -1,6 +1,6 @@
 <?php
-require '../config/user_validation.php';
-require '../config/connection.php';
+require dirname(__DIR__) . '/config/user_validation.php';
+require dirname(__DIR__) . '/config/connection.php';
 
 try {
     // Basic validation - check if client ID is provided

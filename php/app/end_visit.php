@@ -1,8 +1,8 @@
 <?php
 
 
-require '../config/user_validation.php';
-require '../config/connection.php';
+require dirname(__DIR__) . '/config/user_validation.php';
+require dirname(__DIR__) . '/config/connection.php';
 require '../partials/head.php';
 require_once ('../../vendor/autoload.php');
 
