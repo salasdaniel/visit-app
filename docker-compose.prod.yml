@@ -9,6 +9,13 @@ services:
     env_file: .env
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      # Persistencia de Let's Encrypt (certs quedan en el host)
+      - ./certs:/etc/letsencrypt
+      # (opcional) montar el .env dentro si tu código lo lee como archivo
+      - ./.env:/var/www/html/.env:ro
+      - ./vendor:/var/www/html/vendor
     depends_on:
       - db
 
