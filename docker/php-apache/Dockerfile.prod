@@ -42,8 +42,11 @@ RUN set -eux; \
     apt-get purge -y --auto-remove $PHPIZE_DEPS libpq-dev libpng-dev libjpeg-dev libfreetype6-dev libzip-dev; \
     rm -rf /var/lib/apt/lists/*
 
+RUN a2enmod rewrite headers mime ssl
 # Copiar configuración de Apache
-COPY docker/php-apache/vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/php-apache/vhost-http.conf /etc/apache2/sites-available/vhost-http.conf
+COPY docker/php-apache/vhost-ssl.conf  /etc/apache2/sites-available/vhost-ssl.conf
+RUN a2dissite 000-default.conf || true && a2ensite vhost-http.conf
 
 WORKDIR /var/www/html
 
