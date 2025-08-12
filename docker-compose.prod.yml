@@ -7,9 +7,12 @@ services:
     container_name: visitapp_prod
     restart: always
     env_file: .env
+    environment:
+      APACHE_SERVER_NAME: visitapp.noko.com.py
+      LE_EMAIL: daniel@noko.com.py
     ports:
       - "80:80"
-      - "443:443"
+      - "443:443"  
     volumes:
       # Persistencia de Let's Encrypt (certs quedan en el host)
       - ./certs:/etc/letsencrypt

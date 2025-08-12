@@ -42,7 +42,6 @@ RUN set -eux; \
     apt-get purge -y --auto-remove $PHPIZE_DEPS libpq-dev libpng-dev libjpeg-dev libfreetype6-dev libzip-dev; \
     rm -rf /var/lib/apt/lists/*
 
-RUN a2enmod rewrite headers mime ssl
 # Copiar configuración de Apache
 COPY docker/php-apache/vhost-http.conf /etc/apache2/sites-available/vhost-http.conf
 COPY docker/php-apache/vhost-ssl.conf  /etc/apache2/sites-available/vhost-ssl.conf
@@ -55,3 +54,16 @@ COPY --chown=www-data:www-data . /var/www/html
 
 # Sobrescribir vendor con el generado en el stage anterior
 COPY --from=vendor --chown=www-data:www-data /app/vendor /var/www/html/vendor
+
+# Instalar certbot y habilitar SSL
+RUN apt-get update && apt-get install -y --no-install-recommends certbot python3-certbot-apache \
+ && a2enmod ssl headers rewrite mime \
+ && rm -rf /var/lib/apt/lists/*
+
+# Script de arranque
+COPY docker/php-apache/init-ssl.sh /usr/local/bin/init-ssl.sh
+RUN chmod +x /usr/local/bin/init-ssl.sh
+
+# Inicia con nuestro script (no uses el CMD por defecto)
+CMD ["/usr/local/bin/init-ssl.sh"]
+
